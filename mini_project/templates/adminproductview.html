@@ -1,0 +1,103 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css">
+    <style>
+        .table-container {
+            max-height: 380px;
+            overflow-y: scroll;
+        }
+        .bottom-buttons {
+            position: sticky;
+            bottom: 20px;
+            background-color: transparent;
+            padding: 5px;
+            box-shadow: none;
+        }
+        .bottom-buttons a.btn {
+            color: white;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card bg-light">
+                <div class="card-body">
+                    <h2 class="text-center mb-4">Product List</h2>
+                    <form method="POST" >
+                        {%csrf_token%}
+                        
+                            <a href="{% url 'addproduct' %}" class="btn btn-success">Add Product</a>
+                                           
+                            <a href="{% url 'add_category' %}" class="btn btn-success">Add Category</a>
+                                    
+                        
+                        <div class="input-group">
+                            <input type="text" name="search" class="form-control" placeholder="Search by keyword">
+                            <button type="submit" class="btn btn-info">Search</button>
+                        </div>
+                    </form>
+                    <div class="table-container">
+                        <table class="table table-bordered">
+                            
+                            <thead>
+
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Name</th>
+                                    <th>Category</th>
+                                    <th>Price</th>
+                                    <th>Quantity</th>
+                                    <th>Options</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for i in product %}
+                                {% if not i.deleted %}
+                                <tr>
+                                    <td>{{forloop.counter}}</td>
+                                    <td>{{i.Name}}</td>
+                                    <td>{{i.category.Name}}</td>
+                                    <td>{{i.price}}</td>
+                                    <td>{{i.quantity}}</td> 
+                                    <td><a href="{% url 'admin_edit' i.id %}" class="btn btn-danger">Edit</a>
+                                        <a href="{% url 'admin_delete' i.id %}" class="btn btn-danger delete-btn">Delete</a>
+
+                                    </td>
+                                </tr>
+                                {% endif %}
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        
+    </div>
+</div>
+
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/js/bootstrap.bundle.min.js"></script>
+<script defer>
+    let deleteButtons = document.querySelectorAll('.delete-btn');
+    for (let button of deleteButtons) {
+        button.onclick = (e) => {
+            e.preventDefault();
+            if (confirm("Are you sure you wish to delete?")) {
+                window.location.href = e.target.href;
+            }
+        }
+    }
+
+</script>
+</body>
+</html>
