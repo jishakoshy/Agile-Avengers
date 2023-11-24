@@ -1,0 +1,95 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Category - Admin Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="{% static 'assets/vendors/mdi/css/materialdesignicons.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/vendors/css/vendor.bundle.base.css' %}">
+    
+    <link rel="stylesheet" href="{% static 'assets/css/style.css' %}">
+    <!-- End layout styles -->
+    <link rel="shortcut icon" href="assets/images/favicon.ico" />
+    
+    <style>
+        /* Basic styling for the content area */
+        .content {
+            padding: 20px;
+        }
+
+        /* Styling for form elements */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        /* Styling for the "Edit Category" button */
+        .edit-category-button {
+            background-color: #28a745;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .edit-category-button:hover {
+            background-color: #218838;
+        }
+
+        /* Add more specific styling as needed */
+    </style>
+</head>
+<body>
+    <div class="content">
+        <h2>Edit Category</h2>
+        {% for message in messages %} <p>{{ message }}</p> {% endfor %}
+
+        <!-- Form for editing categories -->
+        <form method="POST" action="{% url 'edit_category' category.id %}">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="name">Category Name:</label>
+                <input type="text" id="name" name="name" value="{{ category.Name }}" required>
+            </div>
+
+            <div class="form-group">
+                <label for="discription">Description:</label>
+                <input type="text" id="discription" name="discription" value="{{ category.description }}" required>
+            </div>
+
+            <!-- Hidden input for category ID when editing -->
+            <input type="hidden" id="category_id" name="category_id" value="{{ category.id }}">
+
+            <div class="form-group">
+                <button type="submit" class="edit-category-button">Edit Category</button>
+            </div>
+        </form>
+        {% if error_message %}
+        <div class="alert alert-danger" role="alert">
+            {{ error_message }}
+        </div>
+        {% endif %}
+    
+        {% for message in messages %}
+        <div class="alert alert-danger" role="alert">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+</body>
+</html>

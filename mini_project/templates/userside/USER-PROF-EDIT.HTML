@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Edit</title>
+    <!-- Add your CSS links here -->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            margin-right: 800px;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            height: 100vh;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-top: 10px;
+        }
+
+        form {
+            max-width: 400px;
+            width: 100%;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+            box-sizing: border-box;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #4caf50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+
+</head>
+<body>
+
+<h1>Edit User Details</h1>
+
+<form method="post" action="{% url 'user_edit' %}">
+    {% csrf_token %}
+    
+    <label for="new_first_name">First Name:</label>
+    <input type="text" name="new_first_name" value="{{ user.first_name }}" required><br>
+    
+    <label for="new_last_name">Last Name:</label>
+    <input type="text" name="new_last_name" value="{{ user.last_name }}" required><br>
+    
+    <label for="new_email">Email:</label>
+    <input type="email" name="new_email" value="{{ user.email }}" required><br>
+    
+    <label for="new_phone_number">Phone Number:</label>
+    <input type="tel" name="new_phone_number" value="{{ user.phone_number }}" required><br>
+    
+    <button type="submit">Save Changes</button>
+</form>
+
+</body>
+</html>

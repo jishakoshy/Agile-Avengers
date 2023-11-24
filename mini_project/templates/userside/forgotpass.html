@@ -1,0 +1,35 @@
+<!-- @never_cache
+def verify_otp(request):
+    if request.method == 'POST':
+        verify_otp = request.POST.get('otp') 
+
+        if 'username' in request.session:
+            username = request.session['username']
+        else:
+            messages.error(request, 'Username not found in session')
+            return redirect('loginn')
+
+        otp_secret_key = request.session['otp_secret_key']
+        otp_valid_until = request.session['otp_valid_date']
+        
+
+        if otp_secret_key and otp_valid_until:
+            valid_until = datetime.fromisoformat(otp_valid_until)
+            if valid_until > datetime.now():
+                totp = pyotp.TOTP(otp_secret_key, interval = 60)
+                if totp.verify(verify_otp):
+                    user = get_object_or_404(Customer, email = username)
+                    login(request, user)
+                    del request.session['otp_secret_key']
+                    del request.session['otp_valid_date']
+                    return redirect('home')
+                else:
+                    messages.error(request, 'Invalid one time password')
+                    
+            else:
+                messages.error(request, 'one time password expired')
+        else:
+            messages.error(request, 'something went wrong')
+
+
+    return render(request, 'otp.html') -->
