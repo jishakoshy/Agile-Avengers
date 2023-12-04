@@ -67,6 +67,13 @@
         </li>
         
         <li class="nav-item">
+            <a class="nav-link" href="pages/forms/basic_elements.html"></a>
+              <a class="nav-link" href="{% url 'sales_report' %}">
+              <span class="menu-title"> Sales Report </span>
+              <i class="mdi mdi-format-list-bulleted menu-icon"></i>
+            </a>
+        </li>
+        <li class="nav-item">
             <a class="nav-link" href="pages/icons/mdi.html">
             <a class="nav-link" href="{% url 'user_management' %}">
             <span class="menu-title">User Management</span>
@@ -144,6 +151,7 @@
                                     <th>Category</th>
                                     <th>Price</th>
                                     <th>Quantity</th>
+                                    <th>size</th>
                                     <th>Options</th>
                                 </tr>
                             </thead>
@@ -156,15 +164,9 @@
                                     <td><img src="{{ i.image.url }}" alt="{{ i.Name }}" style="max-width: 100px; max-height: 100px;"></td>
                                     <td>{{i.category.Name}}</td>
                                     <td>{{i.price}}</td>
-                                    <!-- <td>{{ i. }}</td> -->
-                                     <td>
-                                        {% for size in i.size_set.all %}
-                                            {{size.size}} -{{ size.quantity }}<br>
-                                        {% endfor %}
-                                    </td> 
-
-                                    
-                                     <td>
+                                    <td>{{i.quantity}}</td>
+                                    <td>{{i.size }}</td>
+                                    <td>
                                         <a href="{% url 'admin_edit' i.id %}" class="btn btn-danger">Edit</a>
                                         <a href="{% url 'admin_delete' i.id %}" class="btn btn-danger delete-btn">Delete</a>
 
@@ -173,13 +175,6 @@
                                 {% endif %}
                                 {% endfor %}
                             </tbody> 
-
-
-
-
-                            
-
-
 
                         </table>
                     </div>

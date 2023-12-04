@@ -54,7 +54,15 @@
                 <i class="mdi mdi-home menu-icon"></i>
               </a>
             </li>
-           
+            
+            <li class="nav-item">
+              <a class="nav-link" href="pages/forms/basic_elements.html"></a>
+                <a class="nav-link" href="{% url 'sales_report' %}">
+                <span class="menu-title"> Sales Report </span>
+                <i class="mdi mdi-format-list-bulleted menu-icon"></i>
+              </a>
+            </li>
+
             <li class="nav-item">
               <a class="nav-link" href="pages/icons/mdi.html">
                 <a class="nav-link" href="{% url 'user_management' %}">
@@ -147,54 +155,7 @@
                 </div>
               </div>
             </div>
-            <div class="row">
-              <div class="col-md-7 grid-margin stretch-card">
-                <div class="card">
-                  <div class="card-body">
-                    <div class="clearfix">
-                      <h4 class="card-title float-left">Visit And Sales Statistics</h4>
-                      <div id="visit-sale-chart-legend" class="rounded-legend legend-horizontal legend-top-right float-right"></div>
-                    </div>
-                    <canvas id="visit-sale-chart" class="mt-4"></canvas>
-                  </div>
-                </div>
-              </div>
-              
-            </div> 
-
-            <div class="row">
-              <div class="col-md-4 stretch-card grid-margin">
-                <div class="card bg-gradient-primary card-img-holder text-white">
-                  <div class="card-body">
-                    <img src="{% static 'assets/images/dashboard/circle.svg' %}" class="card-img-absolute" alt="circle-image" />
-                    <h4 class="font-weight-normal mb-3">Daily Sales <i class="mdi mdi-chart-line mdi-24px float-right"></i></h4>
-                    <!-- Add your daily sales data here -->
-                  </div>
-                </div>
-              </div>
-
-              <!-- Weekly Sales Report -->
-              <div class="col-md-4 stretch-card grid-margin">
-                <div class="card bg-gradient-info card-img-holder text-white">
-                  <div class="card-body">
-                    <img src="{% static 'assets/images/dashboard/circle.svg' %}" class="card-img-absolute" alt="circle-image" />
-                    <h4 class="font-weight-normal mb-3">Weekly Sales <i class="mdi mdi-chart-line mdi-24px float-right"></i></h4>
-                    <!-- Add your weekly sales data here -->
-                  </div>
-                </div>
-              </div>
-
-              <!-- Yearly Sales Report -->
-              <div class="col-md-4 stretch-card grid-margin">
-                <div class="card bg-gradient-success card-img-holder text-white">
-                  <div class="card-body">
-                    <img src="{% static 'assets/images/dashboard/circle.svg' %}" class="card-img-absolute" alt="circle-image" />
-                    <h4 class="font-weight-normal mb-3">Yearly Sales <i class="mdi mdi-chart-line mdi-24px float-right"></i></h4>
-                    <!-- Add your yearly sales data here -->
-                  </div>
-                </div>
-              </div>
-            </div>
+            
 
             <div class="row">
               <div class="col-12 grid-margin">

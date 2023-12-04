@@ -10,7 +10,9 @@ admin.site.register(OrderItem)
 admin.site.register(Subimage)
 admin.site.register(Category)
 admin.site.register(Cart)
-admin.site.register(Size)
+admin.site.register(Wallet)
+admin.site.register(Transaction)
+# admin.site.register(Size)
 
 
 

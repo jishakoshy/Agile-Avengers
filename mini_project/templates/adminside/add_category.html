@@ -95,6 +95,13 @@
                 <i class="mdi mdi-home menu-icon"></i>
               </a>
             </li>
+            <li class="nav-item">
+              <a class="nav-link" href="pages/forms/basic_elements.html"></a>
+                <a class="nav-link" href="{% url 'sales_report' %}">
+                <span class="menu-title"> Sales Report </span>
+                <i class="mdi mdi-format-list-bulleted menu-icon"></i>
+              </a>
+            </li>
            
             <li class="nav-item">
               <a class="nav-link" href="pages/icons/mdi.html">
@@ -182,25 +189,25 @@
     <!-- Table for listing categories -->
     <h2>Categories</h2>
     <table>
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <!-- <th>Description</th> -->
-                <th>Edit</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for category in categories %}
-                <tr>
-                    <td>{{ category.id }}</td>
-                    <td>{{ category.Name }}</td>
-                    <!-- <td>{{ category.description }}</td> -->
-                    <td><a href="{% url 'edit_category' category.id %}">Edit</a></td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+      <thead>
+          <tr>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Edit</th>
+              <th>Delete</th>
+          </tr>
+      </thead>
+      <tbody>
+          {% for category in categories %}
+              <tr>
+                  <td>{{ category.id }}</td>
+                  <td>{{ category.Name }}</td>
+                  <td><a href="{% url 'edit_category' category.id %}">Edit</a></td>
+                  <td><a href="{% url 'delete_category' category.id %}">Delete</a></td>
+              </tr>
+          {% endfor %}
+      </tbody>
+  </table>
     
 </div>
 

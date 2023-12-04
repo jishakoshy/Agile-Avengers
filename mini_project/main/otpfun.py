@@ -10,11 +10,12 @@ def sent_otp(request):
     valid_date = datetime.now() + timedelta(minutes=1)
     request.session['otp_valid_date'] = str(valid_date)
     account_sid = 'AC93906130cf2f8039f4f9dad613d46c6c'
-    auth_token = '048ca0ab6179bf9ca72ca5572ffbb25f'
+    auth_token = 'b2662778ac7c2673705332f6ef36e81e'
     client = Client(account_sid, auth_token)
     from_number = '+16562186679'
     to_number = '+919061731669'
     try:
+        print("SEnding otp")
         message = client.messages.create(
             body=f"Your OTP is: {otp}",
             from_=from_number,

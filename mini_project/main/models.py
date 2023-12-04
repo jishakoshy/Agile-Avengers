@@ -1,4 +1,4 @@
-from ctypes import addressof
+# from ctypes import addressof
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.db import models
 
@@ -41,6 +41,7 @@ class Customer(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     phone_number = models.CharField(max_length=15, default='')
+    
 
     # selected_address = models.OneToOneField('Address', null=True, blank=True, on_delete=models.SET_NULL, related_name='selected_address_for_customer')
 
@@ -63,13 +64,6 @@ class Customer(AbstractBaseUser, PermissionsMixin):
         related_name='main_customuser_groups',  
     )
 
-class Size(models.Model):
-    product =  models.ForeignKey('Product', on_delete=models.CASCADE) 
-    quantity = models.PositiveIntegerField(default=0)
-    size = models.IntegerField(choices= [(7,'7'),(8,'8'),(9,'9')],null=True, blank=True, default=None)
-
-    def __str__(self) -> str:
-        return f"{self.product.Name} - {self.size} - {self.quantity}"
 
 class Wishlist(models.Model):
     user = models.ForeignKey('Customer', on_delete=models.CASCADE)
@@ -81,8 +75,7 @@ class Wishlist(models.Model):
 class Cart(models.Model):
     product = models.ForeignKey('Product', on_delete=models.CASCADE)
     user = models.ForeignKey('Customer', on_delete=models.CASCADE)
-    quantity = models.IntegerField( default = 1)
-    
+    quantity = models.IntegerField( default = 1)   
     
     def __str__(self):
         return f"Cart for {self.user}"
@@ -97,8 +90,9 @@ class Product(models.Model):
     subimg = models.ManyToManyField("Subimage", blank= True)
     status = models.BooleanField(default=True)
     deleted = models.BooleanField(default=False)
-    
-
+    quantity = models.PositiveIntegerField(default=0)
+    size = models.IntegerField(choices= [(7,'7'),(8,'8'),(9,'9')],null=True, blank=True, default=None)
+    is_varient = models.BooleanField(default=False)
     def __str__(self):
         return self.Name
 
@@ -115,21 +109,27 @@ class Category(models.Model):
     description = models.TextField()
     status = models.BooleanField()
 
+    def soft_delete(self):
+        self.status = False  
+        self.save()
 
 class Order(models.Model):
-    # STATUS_CHOICES = [
-    #     ('pending', 'Pending'),
-    #     ('canceled', 'Canceled'),
-    #     ('completed', 'Completed'),
-    #     # Add more choices as needed
-    # ]
-
+    STATUS_CHOICES = [
+        ('Pending', 'Pending'),
+        ('Shipping', 'Shipping'),
+        ('Delivered', 'Delivered'),
+        ('Return', 'Return'),
+        ('Reject', 'Reject'),
+    ]
+    payment_option = models.CharField(max_length=225,default='cod')
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Pending')
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
     order_date = models.DateTimeField(auto_now_add=True)
     payment_method = models.CharField(max_length=50)
     total_amount = models.DecimalField(max_digits=10, decimal_places=2)
-    # status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
     cancel = models.BooleanField(default=False)
+    returned = models.BooleanField(default=False)
+    # delivered = models.BooleanField(default=False)
     def __str__(self):
         return f"Order #{self.pk} by {self.customer}"
 
@@ -138,10 +138,52 @@ class OrderItem(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField()
     product_price = models.DecimalField(max_digits=10, decimal_places=2)
-   
 
     def __str__(self):
         return f"{self.quantity}x {self.product.Name} in Order #{self.order.pk}"
 
+class Wallet(models.Model):
+    user = models.OneToOneField(Customer, on_delete=models.CASCADE)
+    balance = models.DecimalField(max_digits=10, decimal_places=2,default=0.0)
 
-    
+    # def deposit(self, amount):
+    #     amount = Decimal(amount)
+    #     self.balance += amount
+    #     self.save()
+
+    # def withdraw(self, amount):
+    #     amount = Decimal(amount)
+    #     if self.balance >= amount:
+    #         self.balance -= amount
+    #         self.save()
+    #     else:
+    #         raise ValueError("Insufficient balance")
+
+    def _str_(self):
+        return f"Wallet for {self.user.first_name}"
+
+# models.py
+class Transaction(models.Model):
+    user = models.ForeignKey(Customer, on_delete=models.CASCADE)
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    timestamp = models.DateTimeField(auto_now_add=True)
+    transaction_balance = models.DecimalField(max_digits=10, decimal_places=2)  # Use DecimalField for precision
+    transaction_type = models.CharField(max_length=20, choices=(('Deposit', 'Deposit'), ('Withdrawal', 'Withdrawal'), ('Refund', 'Refund')))
+    related_order = models.ForeignKey(Order, on_delete=models.SET_NULL, null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.transaction_type} of ${self.amount} for {self.user.first_name}"
+
+# class Transaction(models.Model):
+#     user = models.ForeignKey(Customer, on_delete=models.CASCADE)
+#     amount = models.DecimalField(max_digits=10, decimal_places=2)
+#     # transaction_type = models.CharField(max_length=20, choices= (('Deposit', 'Deposit'),('Withdrawal', 'Withdrawal')))
+#     timestamp = models.DateTimeField(auto_now_add=True)
+#     transaction_balance = models.FloatField()
+#     transaction_type = models.CharField(
+#         max_length=20,
+#         choices=(('Deposit', 'Deposit'), ('Withdrawal', 'Withdrawal'), ('Refund', 'Refund')),
+#     )
+
+#     def _str_(self):
+#         return f"{self.transaction_type} of ${self.amount} for {self.user.first_name}"

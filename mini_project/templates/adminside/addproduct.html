@@ -13,6 +13,8 @@
     <link rel="stylesheet" href="{% static 'assets/css/style.css' %}">
     <!-- End layout styles -->
     <link rel="shortcut icon" href="assets/images/favicon.ico" />
+    <!-- image crop -->
+    <link rel="stylesheet" href="path/to/cropper.min.css">
 
 </head>
 <body>
@@ -97,6 +99,13 @@
             <i class="mdi mdi-home menu-icon"></i>
           </a>
         </li>
+        <li class="nav-item">
+          <a class="nav-link" href="pages/forms/basic_elements.html"></a>
+            <a class="nav-link" href="{% url 'sales_report' %}">
+            <span class="menu-title"> Sales Report </span>
+            <i class="mdi mdi-format-list-bulleted menu-icon"></i>
+          </a>
+        </li>
        
         <li class="nav-item">
           <a class="nav-link" href="pages/icons/mdi.html">
@@ -173,12 +182,28 @@
                       <option value="9">9-inch</option>
                       
               </select>
-            </div> 
 
+            </div> 
+            <div class="form-group">
+              <label for="price">Is_varient</label>
+              <input type="checkbox" id="bool" name="varient" step="0.01" value="true" >
+            </div>
             <div class="form-group">
                 <label for="image">Choose Image</label>
                 <input type="file" id="image" name="image"  step="0.01" required>
+                
             </div>
+<!-- image crop -->
+            <!-- <div>
+              <div id="imagePreview" style="max-width: 100%; overflow: hidden"></div>
+
+              <button type="button" id="cropButton">Crop Image</button>            
+              <input type="hidden" id="x" name="x">
+              <input type="hidden" id="y" name="y">
+              <input type="hidden" id="width" name="width">
+              <input type="hidden" id="height" name="height">
+            </div> -->
+            
 
             <div class="form-group">
                 <label for="images">Sub Image</label>
@@ -209,12 +234,42 @@
 
     </div>
 
-    <!-- CSS Styles -->
     
   
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
    
+
+<!-- image crop script -------------------------------------->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropper/4.1.0/cropper.min.js"></script>
+<script src="path/to/cropper.min.js"></script>
+<script>
+  
+  document.addEventListener("DOMContentLoaded", function () {
+    var image = document.getElementById('imageInput');
+    var cropper = new Cropper(image, {
+      aspectRatio: 1, 
+      viewMode: 2,    
+    });
+
+
+    document.getElementById('cropButton').addEventListener('click', function () {
+      // Get the cropped area coordinates and dimensions
+      var cropData = cropper.getData();
+
+      document.getElementById('x').value = cropData.x;
+      document.getElementById('y').value = cropData.y;
+      document.getElementById('width').value = cropData.width;
+      document.getElementById('height').value = cropData.height;
+
+      // Submit the form (or you can perform AJAX submission)
+      document.querySelector('form').submit();
+    });
+  });
+</script>
+
+
+
 </body>
 </html>

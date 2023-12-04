@@ -19,18 +19,26 @@ urlpatterns = [
     path('product_detail/<int:product_id>/',views.Product_detail, name = 'product_detail'),
     path('searchproduct/',views.search_products, name ='search_products'),
     
+    # shop
+     path('Shop/', views.Shop, name='Shop'),
+
     # checkout Page--------------------
     path('checkout/', views.checkout_view, name='checkout'),
     # path('change_address/', views.change_address_view, name='change_address'),
     path('orderaddress/', views.orderaddress, name='orderaddress'),
     path('order_address/', views.order_add_addre, name='order_address'),
 
+    # filter
+    path('category/<int:category_id>/', views.category_filter, name='category_filter'),
 
+    # payment razor----------
+    path('payment_success', views.payment_success, name='payment_success'),
 
     # order management-----------------
     path('order/success/<int:order_id>/', views.order_success, name='order_success'),
 
     path('cancelorder/<int:order_id>/', views.cancelorder, name='cancelorder'),
+    path('return_order/<int:order_id>/', views.return_order, name='returnorder'),
 
     #user profile ---------------------
     path('userprofile/', views.userprofile, name='userprofile'),
@@ -42,7 +50,7 @@ urlpatterns = [
     path('remove_address/<int:address_id>/', views.remove_address, name='remove_address'),
     path('viewaddress/', views.view_address, name='viewaddress'),
 
-        #  user profile order list
+    #  user profile order list
     path('order/<int:order_id>/', views.view_order, name='view_order'),
 
     # Wishlist
@@ -59,7 +67,8 @@ urlpatterns = [
 
 
     # wallet
-    path('wallet/', views.wallet_view, name='wallet_view'),
+    path('wallet/', views.wallet, name='wallet_view'),
+    # path('deposit_wallet/', views.deposit_wallet, name='deposit_wallet'),
 
 ]
 

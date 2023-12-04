@@ -74,11 +74,15 @@
                         
                         </ul>
                         <ul class="nav navbar-nav navbar-right">
-                            <li class="nav-item"><a href="#" class="cart"><span class="ti-bag"></span></a></li>
-                            <li class="nav-item">
-                                <button class="search"><span class="lnr lnr-magnifier" id="search"></span></button>
-                            </li>
-                        </ul>
+							<li class="nav-item"><a href="{% url 'cart' %}" class="cart"><span class="ti-bag"></span></a></li>
+							<li class="nav-item"><a href="{% url 'wallet_view' %}" class="wallet"><span class="ti-wallet"></span></a></li>
+						</ul>
+						<ul class="nav navbar-nav navbar-right">
+							<li class="nav-item"><a href="{% url 'wishlist' %}" class="wishlist"><span class="lnr lnr-heart"></span></a></li>
+							<li class="nav-item">
+								<button class="search"><span class="lnr lnr-magnifier" id="search"></span></button>
+							</li>
+						</ul>
                     </div>
                 </div>
             </nav>
@@ -114,7 +118,6 @@
                         <p>Order Date: {{ order.order_date }}</p>
                         <p>Total Amount: {{ order.total_amount }}</p>
                         <p>Payment Method: {{ order.payment_method }}</p>
-                        <!-- Add more details as needed based on your Order model -->
 
                         <h5>Order Items:</h5>
                         <ul>
@@ -125,9 +128,12 @@
                         </ul>
                         {% if order.cancel %}
                             <p>cancelled</p>
+                        {% elif order.status == 'Delivered' %}
+                        <a class="btn btn-danger" href="{% url 'returnorder' order.id %}">Return Order</a>
                         {% else %}
                             <a class="btn btn-danger" href="{% url 'cancelorder' order.id %}">Cancel Order</a>
                         {% endif %}
+
                         {% endfor %}
                     </div>
                 </div>

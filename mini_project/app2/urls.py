@@ -14,10 +14,11 @@ urlpatterns = [
     # category management
     path('add_category/',views.Add_category, name ='add_category'),
     path('edit_category/<int:category_id>/', views.Edit_category, name='edit_category'),
+    path('delete_category/<int:category_id>/', views.delete_category, name='delete_category'),
     
     # Sales Report
-    path('dashboard/', views.DashboardView, name='dashboard'),
-
+    path('sales_report/', views.Salesreport, name='sales_report'),
+    path('generate_pdf/', views.generate_pdf, name='generate_pdf'),
 
     # product management
     path('addproduct/',views.Add_product, name ='addproduct'),
@@ -31,9 +32,8 @@ urlpatterns = [
 
     # order management
     path('order-management/', views.order_management, name='order_management'),
-    
-    
-
+    path('update_order_status/<int:order_id>/', views.update_order_status, name='update_order_status'),
+     
     # inventory stock
     path('stock_list/', views.stock_list, name='stock_list'),
 

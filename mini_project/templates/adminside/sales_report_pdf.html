@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sales Report</title>
+    <style>
+        /* Add your PDF-friendly styles here */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        /* Add more styles as needed */
+    </style>
+</head>
+<body>
+    <h1>Sales Report</h1>
+
+    <!-- Include your sales data here using Django template language -->
+    <table>
+        <thead>
+            <tr>
+                <th>Order ID</th>
+                <th>Customer</th>
+                <th>Product</th>
+                <th>Quantity</th>
+                <th>Total Price</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for order in orders %}
+                {% for item in order.items.all %}
+                    <tr>
+                        {% if forloop.first %}
+                            <!-- Display order ID and customer name in the first row of each order -->
+                            <td rowspan="{{ order.items.count }}">{{ order.id }}</td>
+                            <td rowspan="{{ order.items.count }}">{{ order.customer.first_name }} {{ order.customer.last_name }}</td>
+                        {% endif %}
+                        <!-- Display order item details in each row -->
+                        <td>{{ item.product.Name }}</td>
+                        <td>{{ item.quantity }}</td>
+                        <td>{{ item.product_price }}</td>
+                    </tr>
+                {% endfor %}
+            {% endfor %}
+        </tbody>
+        
+    </table>
+
+    <!-- Add more sections for other parts of your sales report -->
+
+</body>
+</html>
+

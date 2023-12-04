@@ -52,7 +52,14 @@
                 <i class="mdi mdi-home menu-icon"></i>
               </a>
             </li>
-           
+            <li class="nav-item">
+              <a class="nav-link" href="pages/forms/basic_elements.html"></a>
+                <a class="nav-link" href="{% url 'sales_report' %}">
+                <span class="menu-title"> Sales Report </span>
+                <i class="mdi mdi-format-list-bulleted menu-icon"></i>
+              </a>
+            </li>
+            
             <li class="nav-item">
               <a class="nav-link" href="pages/icons/mdi.html">
                 <a class="nav-link" href="{% url 'user_management' %}">
@@ -118,11 +125,21 @@
                     <td>{{i.id}}</td>
                     <td>{{i.order_date}}</td>
                     <td>{{i.total_amount}}</td>
-                    <td><span class="badge badge-success">Shipping</span></td>
+                    
+                    <td>
+                      <span class="badge badge-success">{{ i.get_status_display }}</span>
+                      <form method="post" action="{% url 'update_order_status' i.id %}">
+                          {% csrf_token %}
+                          <select name="status">
+                              {% for choice in i.STATUS_CHOICES %}
+                                  <option value="{{ choice.0 }}">{{ choice.1 }}</option>
+                              {% endfor %}
+                          </select>
+                          <button type="submit">Update Status</button>
+                      </form>
+                  </td>
                 </tr>
-              {% endfor %}
-                
-                
+              {% endfor %}                                
             </tbody>
         </table>
     </div>
