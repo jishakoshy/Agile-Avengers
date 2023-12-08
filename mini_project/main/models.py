@@ -21,7 +21,6 @@ class CustomUserManager(BaseUserManager):
             raise ValueError('Superuser must have is_staff=True.')
         if extra_fields.get('is_superuser') is not True:
             raise ValueError('Superuser must have is_superuser=True.')
-
         return self.create_user(email, password, **extra_fields)
 
 
@@ -41,9 +40,8 @@ class Customer(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     phone_number = models.CharField(max_length=15, default='')
-    
 
-    # selected_address = models.OneToOneField('Address', null=True, blank=True, on_delete=models.SET_NULL, related_name='selected_address_for_customer')
+    selected_address = models.OneToOneField('Address', null=True, blank=True, on_delete=models.SET_NULL, related_name='selected_address_for_customer')
 
     objects = CustomUserManager()
 
@@ -63,7 +61,6 @@ class Customer(AbstractBaseUser, PermissionsMixin):
         blank=True,
         related_name='main_customuser_groups',  
     )
-
 
 class Wishlist(models.Model):
     user = models.ForeignKey('Customer', on_delete=models.CASCADE)
@@ -146,19 +143,6 @@ class Wallet(models.Model):
     user = models.OneToOneField(Customer, on_delete=models.CASCADE)
     balance = models.DecimalField(max_digits=10, decimal_places=2,default=0.0)
 
-    # def deposit(self, amount):
-    #     amount = Decimal(amount)
-    #     self.balance += amount
-    #     self.save()
-
-    # def withdraw(self, amount):
-    #     amount = Decimal(amount)
-    #     if self.balance >= amount:
-    #         self.balance -= amount
-    #         self.save()
-    #     else:
-    #         raise ValueError("Insufficient balance")
-
     def _str_(self):
         return f"Wallet for {self.user.first_name}"
 
@@ -174,16 +158,4 @@ class Transaction(models.Model):
     def __str__(self):
         return f"{self.transaction_type} of ${self.amount} for {self.user.first_name}"
 
-# class Transaction(models.Model):
-#     user = models.ForeignKey(Customer, on_delete=models.CASCADE)
-#     amount = models.DecimalField(max_digits=10, decimal_places=2)
-#     # transaction_type = models.CharField(max_length=20, choices= (('Deposit', 'Deposit'),('Withdrawal', 'Withdrawal')))
-#     timestamp = models.DateTimeField(auto_now_add=True)
-#     transaction_balance = models.FloatField()
-#     transaction_type = models.CharField(
-#         max_length=20,
-#         choices=(('Deposit', 'Deposit'), ('Withdrawal', 'Withdrawal'), ('Refund', 'Refund')),
-#     )
 
-#     def _str_(self):
-#         return f"{self.transaction_type} of ${self.amount} for {self.user.first_name}"

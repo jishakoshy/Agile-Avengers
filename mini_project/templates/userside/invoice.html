@@ -1,0 +1,27 @@
+<!-- invoice.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Invoice</title> 
+</head>
+<body>
+    <h1>Invoice for Order {{ order.order_number }}</h1>
+    <p>Order Date: {{ order.order_date }}</p>
+
+    <h2>Order Items:</h2>
+    <ul>
+        {% for item in order.items.all %}
+            <li>
+                <p><strong>Product Name:</strong> {{ item.product.Name }}</p>
+                <p><strong>Size:</strong> {{ item.product.size }}</p>
+                <p><strong>Price:</strong> Rs.{{ item.product.price }}</p>
+                <p><strong>Quantity:</strong> {{ item.quantity }}</p>
+            </li>
+        {% endfor %}
+    </ul>
+
+    <p><strong>Total Amount:</strong> Rs.{{ order.total_amount }}</p>
+</body>
+</html>
+

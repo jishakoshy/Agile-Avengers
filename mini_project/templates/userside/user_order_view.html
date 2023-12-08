@@ -121,20 +121,45 @@
 
                         <h5>Order Items:</h5>
                         <ul>
-                            {% for item in order.items.all %}
+                            <!-- {% for item in order.items.all %}
                                 <li>{{ item.quantity }}x {{ item.product.Name }} - {{ item.product_price }}</li>
-                                <!-- Add more details as needed based on your OrderItem model -->
+                                <img src="{{ item.product.image.url }}" alt="{{ item.product.Name }}" style="max-width: 100px; max-height: 100px;" style="width: 6rem;" height="84rem">  
+                                <p class="mb-1"><strong>Size:</strong> {{ item.product.size }}</p>
+                                <p class="mb-1"><strong>Price:</strong> Rs.{{ item.product.price }}</p>
+                                <p class="mb-1"><strong>Quantity:</strong> {{ item.quantity }}</p>
+                                
+                            {% endfor %} -->
                             
+                            <ul>
+                                {% for item in order.items.all %}
+                                    <li>
+                                        <div style="display: flex; align-items: center;">                           
+                                            
+                                            <div style="margin-right: 20px;">
+                                                
+                                                <img src="{{ item.product.image.url }}" alt="{{ item.product.Name }}" style="max-width: 100px; max-height: 150px;">                                               
+                                            </div>
+                            
+                                            <div>
+                                                <p><strong>Product Name: </strong>{{ item.product.Name }}</p>
+                                                <p><strong>Size:</strong> {{ item.product.size }}</p>
+                                                <p><strong>Price:</strong> Rs.{{ item.product.price }}</p>
+                                                <p><strong>Quantity:</strong> {{ item.quantity }}</p>
+                                            </div>
+                                        </div>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                                                      
                         </ul>
                         {% if order.cancel %}
                             <p>cancelled</p>
                         {% elif order.status == 'Delivered' %}
-                        <a class="btn btn-danger" href="{% url 'returnorder' order.id %}">Return Order</a>
+                        <a class="btn btn-danger" href="{% url 'returnorder' order.id %}">Return Order</a>    
                         {% else %}
                             <a class="btn btn-danger" href="{% url 'cancelorder' order.id %}">Cancel Order</a>
                         {% endif %}
-
-                        {% endfor %}
+                        <a href="{% url 'generate_invoice' order.id %}" class="btn btn-success">Download Invoice</a>                       
                     </div>
                 </div>
             </div>

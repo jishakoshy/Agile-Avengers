@@ -148,7 +148,6 @@
 							<tr>
 								<th scope="col">Productname</th>
 								<th scope="col">Quantity</th>
-
 							</tr>
 						</thead>
 						<tbody>
@@ -323,19 +322,3 @@
 
 
 
-<!-- <form class="text-center border border-light p-5" action="{% url 'payment_success' %}" method="POST">
-	{% csrf_token %}
-	<script src="https://checkout.razorpay.com/v1/checkout.js"
-			data-key="{{ razorpay_key }}"
-			data-amount="50000"
-			data-currency="INR"
-			data-order_id="{{ razorpay_order_id }}"
-			data-buttontext="Pay with Razorpay"
-			data-name="Ecomm"
-			data-description="Order #{{ order.id }}"
-			data-prefill.name="{{ request.user.get_full_name }}"
-			data-prefill.email="{{ request.user.email }}"
-			data-prefill.contact="{{ request.user.phone_number }}"
-			data-theme.color="#ff7529">
-	</script>
-</form> -->

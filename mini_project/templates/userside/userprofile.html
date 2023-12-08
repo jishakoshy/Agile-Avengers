@@ -123,10 +123,11 @@
                         <!-- <p class="card-text">Address: {{ user.address }}</p> -->
                         <p class="card-text">Mobile Number: {{ user.phone_number }}</p>
                     </div>
-                    <div class="d-flex justify-content-between">
-                        <a href="{% url 'viewaddress' %}" class="btn btn-primary">Saved Details</a>
-                        <a href="{% url 'user_edit' %}" class="btn btn-primary">User Edit</a>
-                        <a href="{% url 'add_addresses' %}" class="btn btn-primary">Add Address</a>                            
+                    <div class="d-flex  flex-column">
+                        <a href="{% url 'viewaddress' %}" class="btn btn-primary m-1">Saved Details</a>
+                        <a href="{% url 'user_edit' %}" class="btn btn-primary m-1">User Edit</a>
+                        <a href="{% url 'add_addresses' %}" class="btn btn-primary m-1">Add Address</a>  
+                        <a href="{% url 'change_password' %}" class="btn btn-primary m-1">change Password</a>                          
                         
                     </div>
                     
@@ -153,31 +154,43 @@
                     
                 </div>
             </div>
+            <!-- Other HTML code... -->
+
             <div class="col-md-8">
-                <!-- User Orders -->
                 <div class="card">
                     <div class="card-header">
-                        <h5>Order</h5>
-                        
+                        <h5>Order Details</h5>    
                     </div>
-                    <ul class="list-group list-group-flush">
+                    <div class="card-body">
                         {% for order in orders %}
-                        <li class="list-group-item">
-                            Order {{ forloop.counter }} - <a href="{% url 'view_order' order.id %}">View Details</a> 
-                        </li>
+                            <div class="order-item  mb-5 p-3" style="border: 1px solid rgb(210, 207, 207);">
+                                <h6>Order {{ forloop.counter }}</h6>
+                                <ul class="list-group list-group-flush">
+                                    {% for item in order.items.all %}
+                                        <li class="list-group-item">
+                                            <div class="order-item-details d-flex align-items-center">
+                                                <img src="{{ item.product.image.url }}" alt="{{ item.product.Name }}" class="product-image mr-3" style="width: 6rem;" height="84rem">
+                                                <div class="product-info">
+                                                    <p class="mb-1"><strong>Product:</strong> {{ item.product.Name }}</p>
+                                                    <p class="mb-1"><strong>Size:</strong> {{ item.product.size }}</p>
+                                                    <p class="mb-1"><strong>Price:</strong> Rs.{{ item.product.price }}</p>
+                                                    <p class="mb-1"><strong>Quantity:</strong> {{ item.quantity }}</p>
+                                                </div>
+                                            </div>                          
+                                        </li>
+                                    {% endfor %}
+                                    <div class="d-flex justify-content-center">
+                                    <a href="{% url 'view_order' order.id %}" class="btn btn-primary btn-sm m-2">View Details</a>
+                                    </div>
+                                </ul>
+                            </div>
                         {% endfor %}
-                    </ul>
-                </div>
-                <!-- Account Settings -->
-                <!-- <div class="card mt-4">
-                    <div class="card-header">
-                        <h5>Account Settings</h5>
                     </div>
-                    
-                    
-                </div> -->
-                
+                </div>
             </div>
+
+<!-- Other HTML code... -->
+
         </div>
     </div>
 

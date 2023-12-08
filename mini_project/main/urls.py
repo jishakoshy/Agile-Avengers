@@ -7,7 +7,7 @@ from django.conf import settings
 from django.contrib.auth.views import LogoutView
 
 urlpatterns = [
-    # USER SIDE...........................................:-
+    # USER SIDE------------------------------
     path('admin/', admin.site.urls  ),
     path('',views.Home, name ='home'),
     path('sign_up/', views.Sign_up, name = 'sign_up'),
@@ -19,28 +19,28 @@ urlpatterns = [
     path('product_detail/<int:product_id>/',views.Product_detail, name = 'product_detail'),
     path('searchproduct/',views.search_products, name ='search_products'),
     
-    # shop
-     path('Shop/', views.Shop, name='Shop'),
+    # shop---------------------------------
+    path('Shop/', views.Shop, name='Shop'),
 
-    # checkout Page--------------------
+    # checkout Page-------------------------
     path('checkout/', views.checkout_view, name='checkout'),
-    # path('change_address/', views.change_address_view, name='change_address'),
     path('orderaddress/', views.orderaddress, name='orderaddress'),
     path('order_address/', views.order_add_addre, name='order_address'),
 
-    # filter
+    # filter----------------------------------
     path('category/<int:category_id>/', views.category_filter, name='category_filter'),
+    path('filter_products_by_price/', views.filter_products_by_price, name='filter_products_by_price'),
 
-    # payment razor----------
+    # payment razor----------------------------
     path('payment_success', views.payment_success, name='payment_success'),
 
-    # order management-----------------
+    # order management-------------------------
     path('order/success/<int:order_id>/', views.order_success, name='order_success'),
 
     path('cancelorder/<int:order_id>/', views.cancelorder, name='cancelorder'),
     path('return_order/<int:order_id>/', views.return_order, name='returnorder'),
 
-    #user profile ---------------------
+    #user profile ------------------------------
     path('userprofile/', views.userprofile, name='userprofile'),
     path('user_edit/', views.user_edit, name='user_edit'),
 
@@ -49,15 +49,17 @@ urlpatterns = [
     path('edit_address/<int:address_id>/', views.edit_address, name='edit_address'),
     path('remove_address/<int:address_id>/', views.remove_address, name='remove_address'),
     path('viewaddress/', views.view_address, name='viewaddress'),
+    path('change_password/',views.change_password, name = 'change_password'),
 
-    #  user profile order list
+    #  user profile order list--------------------
     path('order/<int:order_id>/', views.view_order, name='view_order'),
+    path('generate-invoice/<int:order_id>/', views.generate_invoice, name='generate_invoice'),
 
-    # Wishlist
+    # Wishlist------------------------------------
     path('wishlist/', views.wishlist_view, name='wishlist'),
     path('add-to-wishlist/<int:product_id>/', views.add_to_wishlist, name='add_to_wishlist'),
 
-    # cart management---------------
+    # cart management-----------------------------
     path('add_to_cart/<int:product_id>/', views.add_to_cart, name='add_to_cart'),
     path('cart/', views.cart, name='cart'),
     path('remove_from_cart/<int:product_id>/', views.remove_from_cart, name='remove_from_cart'),
@@ -66,7 +68,7 @@ urlpatterns = [
     path('product/quantity/<int:product_id>/<int:qty>/', views.get_product_quantity, name='get_product_quantity'),
 
 
-    # wallet
+    # wallet----------------------------------------
     path('wallet/', views.wallet, name='wallet_view'),
     # path('deposit_wallet/', views.deposit_wallet, name='deposit_wallet'),
 

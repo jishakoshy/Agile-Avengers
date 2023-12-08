@@ -173,7 +173,6 @@ def Home(request):
     return render(request,'userside/home.html', {'products':product})
 
     
-
 # @login_required
 def signout(request):
     logout(request)
@@ -207,24 +206,41 @@ def search_products(request):
     context = {'products': products, 'query': query}
     return render(request, 'userside/category.html', context)
 
-# filter
+# filter by category 
 def category_filter(request, category_id):
     category = Category.objects.get(pk=category_id)
     products = Product.objects.filter(category=category, status=True, deleted=False)
-    return render(request, 'userside/category.html', {'products': products})
+    return render(request, 'userside/shop.html', {'products': products})
+
+# filter by min and max price
+def filter_products_by_price(request):
+    min_price = request.GET.get('min_price')
+    max_price = request.GET.get('max_price')
+
+    if min_price and max_price:
+        products = Product.objects.filter(price__gte=min_price, price__lte=max_price)
+    else:
+        products = Product.objects.all()
+    return render(request, 'userside/shop.html', {'products': products})
+
+
+# add to cart
+# @login_required
+# def add_to_cart(request, product_id):
+#     user = request.user
+#     product = Product.objects.get(id=product_id)
+#     cart_item, created = Cart.objects.get_or_create(user=user, product=product)
+#     items = Cart.objects.filter(user=user)
+#     return render(request, 'userside/cartmanage.html', {'items': items})
 
 @login_required
 def add_to_cart(request, product_id):
     user = request.user
     product = Product.objects.get(id=product_id)
-
     cart_item, created = Cart.objects.get_or_create(user=user, product=product)
-    # if created:
-    #     cart_item.quantity += 1
-    #     cart_item.save()
-
     items = Cart.objects.filter(user=user)
-    return render(request, 'userside/cartmanage.html', {'items': items})
+
+    return redirect('home')  
 
 # wishlist
 def wishlist_view(request):
@@ -280,93 +296,9 @@ def update_quantity(request, product_id):
     cart.save()
     return redirect('cart')
 
-# checkout page:-
-# @login_required
-# def checkout_view(request):
-#     cart_items = Cart.objects.filter(user=request.user)
-#     address = Address.objects.filter(customer=request.user).first()
-#     subtotal = sum(item.product.price * item.quantity for item in cart_items)
-#     shipping = Decimal('50.00')
-#     total = subtotal + shipping
-    
-#     order = Order.objects.create(customer=request.user, total_amount=total, payment_method='YourPaymentMethodHere')
 
-#     # Create order items for each item in the cart
-#     for cart_item in cart_items:
-#         OrderItem.objects.create(order=order, product=cart_item.product, quantity=cart_item.quantity, product_price=cart_item.product.price)
-#         # cart_item.product.quantity -= cart_item.quantity
-#         # cart_item.product.save()
-
-#     cart_items.delete()
-#     orders = OrderItem.objects.filter(order=order)
-#     print("Current orders", orders)
-    
-#     client = razorpay.Client(auth=(settings.RAZORPAY_API_KEY, settings.RAZORPAY_API_SECRET_KEY))
-#     razorpay_order = client.order.create({
-#         'amount': int(total * 100),  
-#         'currency': 'INR',  
-#         'payment_capture': 1 
-#     })
-
-#     order.razorpay_order_id = razorpay_order['id']
-#     order.save()
-#     context = {
-#         'items': orders,
-#         'address':address,
-#         'subtotal': subtotal,
-#         'shipping': shipping,
-#         'total': total,
-#         'order': order,
-#         'razorpay_order_id': razorpay_order['id'],
-#         'razorpay_key': settings.RAZORPAY_API_KEY,
-        
-#     }
-
-#     return render(request, 'userside/checkout.html', context)
-
-
-# @login_required
-# def checkout_view(request):
-#     cart_items = Cart.objects.filter(user=request.user)
-#     address = Address.objects.filter(customer=request.user).first()
-#     subtotal = sum(item.product.price * item.quantity for item in cart_items)
-#     shipping = Decimal('50.00')
-#     total = subtotal + shipping
-#     payment_method = request.GET.get('payment_method', 'Default Payment Method')
-
-#     order = Order.objects.create(customer=request.user, total_amount=total, payment_method=payment_method)
-
-#     for cart_item in cart_items:
-#         OrderItem.objects.create(order=order, product=cart_item.product, quantity=cart_item.quantity, product_price=cart_item.product.price)
-
-#     cart_items.delete()
-#     orders = OrderItem.objects.filter(order=order)
-    
-#     client = razorpay.Client(auth=(settings.RAZORPAY_API_KEY, settings.RAZORPAY_API_SECRET_KEY))
-#     razorpay_order = client.order.create({
-#         'amount': int(total * 100),  
-#         'currency': 'INR',  
-#         'payment_capture': 1 
-#     })
-
-#     order.razorpay_order_id = razorpay_order['id']
-#     order.save()
-#     context = {
-#         'items': orders,
-#         'address': address,
-#         'subtotal': subtotal,
-#         'shipping': shipping,
-#         'total': total,
-#         'order': order,
-#         'razorpay_order_id': razorpay_order['id'],
-#         'razorpay_key': settings.RAZORPAY_API_KEY,
-#     }
-
-#     return render(request, 'userside/checkout.html', context)
-
-# -----------------------------------------quantity updation on admin happening here-----------
+# ------------------------quantity updation on admin happening here-----------
 from django.db import transaction
-
 @login_required
 def checkout_view(request):
     cart_items = Cart.objects.filter(user=request.user)
@@ -377,19 +309,25 @@ def checkout_view(request):
     payment_method = request.GET.get('payment_method', 'cod')
 
     with transaction.atomic():
-
         order = Order.objects.create(customer=request.user, total_amount=total, payment_method=payment_method)
 
+        order_items = []  # List to store order items for the context
         for cart_item in cart_items:
             OrderItem.objects.create(order=order, product=cart_item.product, quantity=cart_item.quantity,
                                      product_price=cart_item.product.price)
-
             product = Product.objects.get(id=cart_item.product.id)
             product.quantity -= cart_item.quantity
             product.save()
 
+            # Add product details to order_items list
+            order_items.append({
+                'product_name': cart_item.product.Name,  # Change 'Name' to the actual field in your Product model
+                'quantity': cart_item.quantity,
+            })
+
         cart_items.delete()
 
+        # razorpay
         client = razorpay.Client(auth=(settings.RAZORPAY_API_KEY, settings.RAZORPAY_API_SECRET_KEY))
         razorpay_order = client.order.create({
             'amount': int(total * 100),
@@ -405,12 +343,62 @@ def checkout_view(request):
         'subtotal': subtotal,
         'shipping': shipping,
         'total': total,
+        'payment_method': payment_method,
         'order': order,
+        'order_items': order_items,  # Add order_items to the context
         'razorpay_order_id': razorpay_order['id'],
         'razorpay_key': settings.RAZORPAY_API_KEY,
     }
 
     return render(request, 'userside/checkout.html', context)
+
+
+
+
+
+# @login_required
+# def checkout_view(request):
+#     cart_items = Cart.objects.filter(user=request.user)
+#     address = Address.objects.filter(customer=request.user).first()
+#     subtotal = sum(item.product.price * item.quantity for item in cart_items)
+#     shipping = Decimal('50.00')
+#     total = subtotal + shipping
+#     payment_method = request.GET.get('payment_method','cod')
+    
+#     with transaction.atomic():
+#         order = Order.objects.create(customer=request.user, total_amount=total, payment_method=payment_method)
+
+#         for cart_item in cart_items:
+#             OrderItem.objects.create(order=order, product=cart_item.product, quantity=cart_item.quantity,
+#                                      product_price=cart_item.product.price)
+#             product = Product.objects.get(id=cart_item.product.id)
+#             product.quantity -= cart_item.quantity
+#             product.save()
+
+#         cart_items.delete()
+#         # razorpay
+#         client = razorpay.Client(auth=(settings.RAZORPAY_API_KEY, settings.RAZORPAY_API_SECRET_KEY))
+#         razorpay_order = client.order.create({
+#             'amount': int(total * 100),
+#             'currency': 'INR',
+#             'payment_capture': 1
+#         })
+
+#         order.razorpay_order_id = razorpay_order['id']
+#         order.save()
+
+#     context = {
+#         'address': address,
+#         'subtotal': subtotal,
+#         'shipping': shipping,
+#         'total': total,
+#         'payment_method': payment_method,
+#         'order': order,
+#         'razorpay_order_id': razorpay_order['id'],
+#         'razorpay_key': settings.RAZORPAY_API_KEY,
+#     }
+
+#     return render(request, 'userside/checkout.html', context)
 
 @csrf_exempt
 def payment_success(request):
@@ -426,6 +414,8 @@ def orderaddress(request):
     subtotal = order.total_amount
     shipping = Decimal('50.00')
     total = subtotal + shipping
+
+    selected_address = None
     if request.method == 'POST':
         selected_address_id = request.POST.get('selected_address')
         if selected_address_id:
@@ -433,7 +423,7 @@ def orderaddress(request):
 
             request.user.selected_address = selected_address 
             request.user.save()
-        con = {
+        context = {
             'item': orderitem,
             'address':selected_address,
             'subtotal': subtotal ,
@@ -441,7 +431,7 @@ def orderaddress(request):
             'total': total,
             'order': order,
         }
-        return render(request, 'userside/checkout.html', con)  
+        return render(request, 'userside/checkout.html', context)  
     context = {
         'addresses': user_addresses,
     }
@@ -456,6 +446,7 @@ def order_add_addre(request):
         address = request.POST.get('address')
         city = request.POST.get('city')
         post = request.POST.get('postalCode')
+        # phone = request.POST.get('phone number')
 
         sav = Address.objects.create(customer=cus, address=address, city=city, postalcode=post)
         sav.save()
@@ -472,30 +463,6 @@ def order_success(request, order_id):
         'order_items': order_items,
     }
     return render(request, 'userside/ordermanage.html', context)
-
-
-# orderlist cancel and wallet balance
-
-# from .models import Transaction
-
-# def cancelorder(request, order_id):
-#     order = get_object_or_404(Order, id=order_id)
-#     if not order.cancel:
-#         order.cancel = True
-#         order.save()
-#         # Create a refund transaction
-#         refund_amount = order.total_amount
-#         refund_transaction = Transaction.objects.create(
-#             user=request.user,
-#             amount=-refund_amount,
-#             transaction_type='Refund',
-#             transaction_balance=request.user.wallet.balance - refund_amount,
-#         )
-#         # Update user's wallet balance
-#         request.user.wallet.balance -= refund_amount
-#         request.user.wallet.save()
-
-#     return redirect("userprofile")
 
 
 # cancel order and return order and wallet refund
@@ -552,6 +519,7 @@ def userprofile(request):
     }
     return render(request, 'userside/userprofile.html', context)
 
+# editing profile
 @login_required
 def user_edit(request):
     user = request.user
@@ -595,7 +563,7 @@ def add_addresses(request):
         sav.save()
         return redirect('userprofile') 
     return render(request,'userside/2userprofile.html')
-
+# editing address
 def edit_address(request, address_id):
     address = get_object_or_404(Address, id=address_id)
 
@@ -633,7 +601,6 @@ def get_product_quantity(request, product_id, qty):
     quantity = product.quantity
     return JsonResponse({'success': True, 'quantity': quantity})
 
-
 # wallet
 def wallet(request):
     user = request.user
@@ -641,46 +608,40 @@ def wallet(request):
     transactions = Transaction.objects.filter(user=user).order_by('-timestamp')
     return render(request, 'userside/wallet.html', {'user': userd, 'transactions': transactions})
 
+from xhtml2pdf import pisa
+from io import BytesIO
+def generate_invoice(request, order_id):
+    order = get_object_or_404(Order, id=order_id)
 
+    context = {'order': order}
+    invoice_html = render(request, 'userside/invoice.html', context).content
 
+    
+    pdf_file = BytesIO()
+    pisa.CreatePDF(invoice_html, dest=pdf_file)
 
+    response = HttpResponse(pdf_file.getvalue(), content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename=invoice_{order_id}.pdf'
 
+    return response
 
-# @login_required(login_url='user_view')
-# def wallet(request):
-#     user = request.user
-#     userd = Customer.objects.get(email = user)
-#     return render(request, 'userside/wallet.html' ,{'user': userd})
-
-# def deposit_wallet(request):
-#     if request.method == 'POST':
-#         amount = request.POST.get('amount')
-#         amount = Decimal(amount)
-
-
-#         client = razorpay.Client(auth=(settings.RAZORPAY_API_KEY, settings.RAZORPAY_API_SECRET_KEY))
-#         razorpay_order = client.order.create({
-#             'amount': int(amount * 100),
-#             'currency': 'INR',
-#             'payment_capture': 1
-#         })
-#         # order.razorpay_order_id = razorpay_order['id']
-#         # order.save()
-
-#         wallet = Wallet.objects.get(user=request.user)
-#         wallet.balance += amount
-#         wallet.save()
-
-#         context = {
-#             'total': amount,
-#             'razorpay_order_id': razorpay_order['id'],
-#             'razorpay_key': settings.RAZORPAY_API_KEY,
-#         }
-
-#         return render(request, 'userside/wallet.html', context)
-#     return redirect('wallet_view')
-
-
+# change password
+from django.contrib.auth.forms import PasswordChangeForm
+from django.contrib.auth import update_session_auth_hash
+@login_required
+def change_password(request):
+    if request.method == 'POST':
+        form = PasswordChangeForm(user=request.user, data=request.POST)
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user)  
+            messages.success(request, 'Your password was successfully updated!')
+            return redirect('userprofile') 
+        else:
+            messages.error(request, 'Please correct the error below.')
+    else:
+        form = PasswordChangeForm(user=request.user)
+    return render(request, 'userside/change_password.html', {'form': form})
 
 
 
