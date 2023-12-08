@@ -299,6 +299,7 @@ def update_quantity(request, product_id):
 
 # ------------------------quantity updation on admin happening here-----------
 from django.db import transaction
+
 @login_required
 def checkout_view(request):
     cart_items = Cart.objects.filter(user=request.user)
@@ -306,12 +307,12 @@ def checkout_view(request):
     subtotal = sum(item.product.price * item.quantity for item in cart_items)
     shipping = Decimal('50.00')
     total = subtotal + shipping
-    payment_method = request.GET.get('payment_method', 'cod')
+    payment_method = request.GET.get('payment_method','cod')
 
     with transaction.atomic():
-        order = Order.objects.create(customer=request.user, total_amount=total, payment_method=payment_method)
+        order = Order.objects.create(customer=request.user, total_amount=total, payment_option=payment_method)
 
-        order_items = []  # List to store order items for the context
+        order_items = [] 
         for cart_item in cart_items:
             OrderItem.objects.create(order=order, product=cart_item.product, quantity=cart_item.quantity,
                                      product_price=cart_item.product.price)
@@ -319,10 +320,9 @@ def checkout_view(request):
             product.quantity -= cart_item.quantity
             product.save()
 
-            # Add product details to order_items list
             order_items.append({
-                'product_name': cart_item.product.Name,  # Change 'Name' to the actual field in your Product model
-                'quantity': cart_item.quantity,
+                'product_name': cart_item.product.Name,  
+                'quantity': cart_item.quantity,            
             })
 
         cart_items.delete()
@@ -336,6 +336,7 @@ def checkout_view(request):
         })
 
         order.razorpay_order_id = razorpay_order['id']
+        # order.payment_option= 'upi'
         order.save()
 
     context = {
@@ -345,15 +346,12 @@ def checkout_view(request):
         'total': total,
         'payment_method': payment_method,
         'order': order,
-        'order_items': order_items,  # Add order_items to the context
+        'order_items': order_items,  
         'razorpay_order_id': razorpay_order['id'],
         'razorpay_key': settings.RAZORPAY_API_KEY,
     }
 
     return render(request, 'userside/checkout.html', context)
-
-
-
 
 
 # @login_required
@@ -405,17 +403,18 @@ def payment_success(request):
     return render(request, "userside/payment_success.html")
 
 
+
 @login_required
 def orderaddress(request):
     user_addresses = request.user.addresses.all()  
     user = Customer.objects.get(email = request.user)
     order = Order.objects.filter(customer=user).order_by('-order_date').first()
     orderitem = OrderItem.objects.filter(order = order)
-    subtotal = order.total_amount
+    subtotal = order.total_amount - 50
     shipping = Decimal('50.00')
+    payment_method = 'upi'
     total = subtotal + shipping
-
-    selected_address = None
+    razorpayid = order.razorpay_order_id
     if request.method == 'POST':
         selected_address_id = request.POST.get('selected_address')
         if selected_address_id:
@@ -423,19 +422,28 @@ def orderaddress(request):
 
             request.user.selected_address = selected_address 
             request.user.save()
-        context = {
+
+       
+        con = {
             'item': orderitem,
             'address':selected_address,
             'subtotal': subtotal ,
             'shipping': shipping,
             'total': total,
+            'payment_method': payment_method,
             'order': order,
+            'order_items': orderitem,  
+            'razorpay_order_id': razorpayid ,
+            'razorpay_key': settings.RAZORPAY_API_KEY,
         }
-        return render(request, 'userside/checkout.html', context)  
+
+        return render(request, 'userside/checkout.html', con)  
     context = {
         'addresses': user_addresses,
     }
     return render(request, 'userside/orderaddress.html', context)
+
+
 
 
 def order_add_addre(request):

@@ -46,8 +46,7 @@
                         </thead>
                         <tfoot>
                             <tr>
-                                <th>Username</th>
-                            
+                                <th>Username</th>                            
                                 <th>Date</th>
                                 <th>Total Amount</th>
                                 <th>Payment Method</th>
@@ -56,8 +55,7 @@
                         <tbody>
                             {% for order in current_orders %}
                             <tr>
-                                <td>{{order.customer.first_name}}</td>
-                               
+                                <td>{{order.customer.first_name}}</td>                              
                                 <td>{{order.order_date}}</td>
                                 <td>{{order.total_amount}}</td>
                                 <td>{{order.payment_method}}</td>

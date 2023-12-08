@@ -151,11 +151,11 @@
 							</tr>
 						</thead>
 						<tbody>
-							{% for item in items %}
+							{% for item in order_items %}
 							<tr>
 								<td>
 									<div class="media-body">
-										<p>{{ item.product.Name }}</p>
+										<p>{{ item.product_name }}</p>
 									</div>
 								</td>
 
@@ -182,16 +182,8 @@
 					{% if address %}
 						<div class="payment_item">
 							<label for="f-option5" style="font-size: 18px; color: #333;">Check payments</label>
-							<div class="radion_btn" style="margin-top: 10px;">
-								<input type="radio" id="f-option5" name="selector" value="cod" style="display: none;">							
-
-								<label for="f-option5" style="font-size: 16px; color: #555; cursor: pointer;">
-									Cash on delivery
-								</label>
-								<div class="check" style="background-color: #b4813b;"></div>
-							</div>
-						</div>
-						<button id="rzp-button1" style="background-color: #4CAF50; /* Green */
+							<div  style="margin-top: 10px;">
+								<button id="rzp-button1" style="background-color: #4CAF50; /* Green */
 								border: none;
 								color: white;
 								padding: 15px 32px;
@@ -201,7 +193,22 @@
 								font-size: 16px;
 								margin: 4px 2px;
 								cursor: pointer;">
-							Pay by Razor
+								Pay by Razor
+								</button>
+								<div class="check" style="background-color: #b4813b;"></div>
+							</div>
+						</div>
+						<button  style="background-color: #4CAF50; /* Green */
+								border: none;
+								color: white;
+								padding: 15px 32px;
+								text-align: center;
+								text-decoration: none;
+								display: inline-block;
+								font-size: 16px;
+								margin: 4px 2px;
+								cursor: pointer;">
+							Cash on delivery
 						</button>
 					{% else %}
 					<p class="text-danger">Please enter a valid address</p>

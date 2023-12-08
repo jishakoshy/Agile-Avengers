@@ -419,74 +419,6 @@ def unblock_user(request, user_id):
     messages.success(request, f'User {user.first_name} {user.last_name} has been unblocked.')
     return redirect('user_management')
 
-# sales report
-# def Salesreport(request):
-#     current_orders = Order.objects.all()
-
-#     # Daily Sales Data
-#     daily_sales_data = Order.objects.annotate(
-#         order_date_day=TruncDate('order_date')
-#     ).values('order_date_day').annotate(
-#         total_sales=Sum('items__product_price'),
-#         sales_count=Count('id')
-#     ).order_by('order_date_day')
-
-#     formatted_dates = [entry['order_date_day'].strftime('%d-%B') for entry in daily_sales_data]
-#     sales_count = [entry['sales_count'] for entry in daily_sales_data]
-#     total_amounts = [float(entry['total_sales']) if entry['total_sales'] is not None else 0.0 for entry in daily_sales_data]
-
-#     # Weekly Sales Data
-#     weekly_sales_data = Order.objects.annotate(
-#         order_date_week=TruncWeek('order_date')
-#     ).values('order_date_week').annotate(
-#         total_sales=Sum('items__product_price'),
-#         sales_count=Count('id')
-#     ).order_by('order_date_week')
-
-#     formatted_weeks = [date(entry['order_date_week'].year, entry['order_date_week'].month, entry['order_date_week'].day).strftime('%d-%B') for entry in weekly_sales_data]
-#     total_weekly_sales = [float(entry['total_sales']) for entry in weekly_sales_data]
-
-#     # Monthly Sales Data
-#     monthly_sales_data = Order.objects.annotate(
-#         order_date_month=TruncMonth('order_date')
-#     ).values('order_date_month').annotate(
-#         total_sales=Sum('items__product_price'),
-#         sales_count=Count('id')
-#     ).order_by('order_date_month')
-
-#     formatted_months = [date(entry['order_date_month'].year, entry['order_date_month'].month, 1).strftime('%d-%B') for entry in monthly_sales_data]
-#     total_monthly_sales = [float(entry['total_sales']) for entry in monthly_sales_data]
-
-#     # Yearly Sales Data
-#     yearly_sales_data = Order.objects.annotate(
-#         order_date_year=TruncYear('order_date', output_field=DateTimeField())
-#     ).values('order_date_year').annotate(
-#         total_sales=Sum('items__product_price')
-#     ).order_by('order_date_year')
-
-#     formatted_years = [entry['order_date_year'].strftime('%Y') for entry in yearly_sales_data]
-#     total_yearly_sales = [float(entry['total_sales']) for entry in yearly_sales_data]
-
-#     context = {
-#         "daily_sales_data": daily_sales_data,
-#         "weekly_sales_data": weekly_sales_data,
-#         "monthly_sales_data": monthly_sales_data,
-#         "yearly_sales_data": yearly_sales_data,
-#         "orders": current_orders,
-#         "dates": formatted_dates,
-#         "total_amounts": total_amounts,
-#         "total_weekly_sales": total_weekly_sales,
-#         "formatted_weeks": formatted_weeks,
-#         "total_monthly_sales": total_monthly_sales,
-#         "formatted_months": formatted_months,
-#         "sales_count": sales_count,
-#         "current_orders": current_orders,
-#         "formatted_years": formatted_years,
-#         "total_yearly_sales": total_yearly_sales
-#     }
-
-#     return render(request, 'adminside/sales_report.html', context)
-
 
 
 
@@ -517,11 +449,8 @@ def generate_pdf(request):
     return response
 
 
-
-
 def Salesreport(request):
     current_orders = Order.objects.all()
-
     time_range = request.GET.get('time_range', 'daily')
     daily_sales_data = []
     weekly_sales_data = []
@@ -591,7 +520,7 @@ def Salesreport(request):
         "weekly_sales_data": weekly_sales_data,
         "monthly_sales_data": monthly_sales_data,
         "yearly_sales_data": yearly_sales_data,
-        "orders": current_orders,
+        "current_orders": current_orders,
         "dates": formatted_dates,
         "total_amounts": total_amounts,
         "total_weekly_sales": total_weekly_sales,

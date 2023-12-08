@@ -122,7 +122,7 @@ class Order(models.Model):
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Pending')
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
     order_date = models.DateTimeField(auto_now_add=True)
-    payment_method = models.CharField(max_length=50)
+    razorpay_order_id = models.CharField(max_length=225,default='nothing')
     total_amount = models.DecimalField(max_digits=10, decimal_places=2)
     cancel = models.BooleanField(default=False)
     returned = models.BooleanField(default=False)
