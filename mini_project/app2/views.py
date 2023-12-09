@@ -52,10 +52,32 @@ def Admin_login(request):
     return render(request, 'adminside/admin-login.html')
         
      
+# def Admin_dash(request):
+#      if request.user.is_authenticated:
+#         return render(request, 'adminside/admindash.html')
+#      return redirect('admin_login')
+
 def Admin_dash(request):
-     if request.user.is_authenticated:
-        return render(request, 'adminside/admindash.html')
-     return redirect('admin_login')
+    if request.user.is_authenticated:
+        total_users = Customer.objects.count()
+        total_orders = Order.objects.count()
+        total_products = Product.objects.count()
+
+        context = {
+            'total_users': total_users,
+            'total_orders': total_orders,
+            'total_products': total_products,
+        }
+
+        return render(request, 'adminside/admindash.html', context)
+    
+    return redirect('admin_login')
+# def Admin_dash(request):
+#     if request.user.is_authenticated:
+#         orders = Order.objects.all()
+#         context = {'orders': orders}
+#         return render(request, 'adminside/admindash.html', context)
+#     return redirect('admin_login')
 
 # admin logout
 def Logout(request):
@@ -514,8 +536,11 @@ def Salesreport(request):
 
         formatted_years = [entry['order_date_year'].strftime('%Y') for entry in yearly_sales_data]
         total_yearly_sales = [float(entry['total_sales']) for entry in yearly_sales_data]
+    
+    # order = Order.objects.create(customer=request.user,total_amount=total,payment_option=payment_method)
 
     context = {
+        # "payment_method": order.payment_method,
         "daily_sales_data": daily_sales_data,
         "weekly_sales_data": weekly_sales_data,
         "monthly_sales_data": monthly_sales_data,

@@ -265,7 +265,7 @@ def add_to_wishlist(request, product_id):
         Wishlist.objects.create(user=user, product=product)
         messages.success(request, f'{product.Name} added to your wishlist successfully.')
 
-    return redirect('wishlist')
+    return redirect('home')
 
 @login_required
 def cart(request):
@@ -335,9 +335,11 @@ def checkout_view(request):
             'payment_capture': 1
         })
 
+
         order.razorpay_order_id = razorpay_order['id']
-        # order.payment_option= 'upi'
+        order.payment_option= 'upi'
         order.save()
+        
 
     context = {
         'address': address,
@@ -634,22 +636,35 @@ def generate_invoice(request, order_id):
     return response
 
 # change password
-from django.contrib.auth.forms import PasswordChangeForm
-from django.contrib.auth import update_session_auth_hash
+# from django.contrib.auth.decorators import login_required
+# from django.contrib import messages
+# from django.shortcuts import render, redirect
+from django.contrib.auth.hashers import make_password
+
 @login_required
 def change_password(request):
     if request.method == 'POST':
-        form = PasswordChangeForm(user=request.user, data=request.POST)
-        if form.is_valid():
-            user = form.save()
-            update_session_auth_hash(request, user)  
-            messages.success(request, 'Your password was successfully updated!')
-            return redirect('userprofile') 
-        else:
-            messages.error(request, 'Please correct the error below.')
-    else:
-        form = PasswordChangeForm(user=request.user)
-    return render(request, 'userside/change_password.html', {'form': form})
+        old_password = request.POST.get('old_password')
+        new_password = request.POST.get('new_password')
+        confirm_password = request.POST.get('confirm_password')
+
+        if not request.user.check_password(old_password):
+            messages.error(request, 'Old password is incorrect.')
+            return redirect('change_password')
+
+        if new_password != confirm_password:
+            messages.error(request, 'New password and confirm password do not match.')
+            return redirect('change_password')
+
+        request.user.password = make_password(new_password)
+        request.user.save()
+
+        messages.success(request, 'Password successfully changed.')
+        return redirect('change_password')
+
+    return render(request, 'userside/change_password.html')
+
+
 
 
 
