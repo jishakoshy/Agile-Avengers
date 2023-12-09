@@ -337,7 +337,7 @@ def checkout_view(request):
 
 
         order.razorpay_order_id = razorpay_order['id']
-        order.payment_option= 'upi'
+        # order.payment_option= 'upi'
         order.save()
         
 

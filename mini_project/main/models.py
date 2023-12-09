@@ -72,7 +72,7 @@ class Wishlist(models.Model):
 class Cart(models.Model):
     product = models.ForeignKey('Product', on_delete=models.CASCADE)
     user = models.ForeignKey('Customer', on_delete=models.CASCADE)
-    quantity = models.IntegerField( default = 1)   
+    quantity = models.IntegerField( default = 1, null=True) 
     
     def __str__(self):
         return f"Cart for {self.user}"
@@ -122,7 +122,7 @@ class Order(models.Model):
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Pending')
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
     order_date = models.DateTimeField(auto_now_add=True)
-    razorpay_order_id = models.CharField(max_length=225,default='nothing')
+    razorpay_order_id = models.CharField(max_length=225,default=None, blank=True, null=True)
     total_amount = models.DecimalField(max_digits=10, decimal_places=2)
     cancel = models.BooleanField(default=False)
     returned = models.BooleanField(default=False)
