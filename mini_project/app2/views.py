@@ -15,48 +15,25 @@ from xhtml2pdf import pisa
 from django.http import HttpResponse
 
 # Admin Side:--------------------------------------------
-# @staff_member_required(login_url='admin_login') 
-# def Admin_login(request):
-#     if request.method == 'POST':
-#         username = request.POST['username']
-#         password = request.POST['password']
-#         user = authenticate(username=username, password=password)
-#         if user is not None:
-#             if user.is_staff:
-#                 request.session['username'] = username
-#                 login(request, user)
-#                 return redirect('admin_dashboard')
-#             else:
-#                 messages.error(request,"Login using user login!")
-#                 return redirect('loginn')
-#         else:
-#             messages.error(request, 'Invalid username or password')
-#     return render(request, 'adminside/admin-login.html')
-
-# @staff_member_required(login_url='admin_login')      
-# def Admin_dash(request):
-#         return render(request, 'adminside/admindash.html')
 
 def Admin_login(request):
-    if request.user.is_authenticated:
-        return redirect('admin_dashboard')
     if request.method == 'POST':
         username = request.POST['username']
         password = request.POST['password']
-        user = _Authenticator(username=username, password=password)
+        user = authenticate(username=username, password=password)
         if user is not None:
-            login(request, user)
-            return redirect('admin_dashboard')
+            if user.is_staff:
+                request.session['username'] = username
+                login(request, user)
+                return redirect('admin_dashboard')
+            else:
+                messages.error(request,"Login using user login!")
+                return redirect('loginn')
         else:
             messages.error(request, 'Invalid username or password')
     return render(request, 'adminside/admin-login.html')
-        
-     
-# def Admin_dash(request):
-#      if request.user.is_authenticated:
-#         return render(request, 'adminside/admindash.html')
-#      return redirect('admin_login')
 
+@staff_member_required(login_url='admin_login')    
 def Admin_dash(request):
     if request.user.is_authenticated:
         total_users = Customer.objects.count()
@@ -72,12 +49,7 @@ def Admin_dash(request):
         return render(request, 'adminside/admindash.html', context)
     
     return redirect('admin_login')
-# def Admin_dash(request):
-#     if request.user.is_authenticated:
-#         orders = Order.objects.all()
-#         context = {'orders': orders}
-#         return render(request, 'adminside/admindash.html', context)
-#     return redirect('admin_login')
+
 
 # admin logout
 def Logout(request):
@@ -85,8 +57,7 @@ def Logout(request):
         logout(request)
     return redirect('admin_login') 
 
-
-# @staff_member_required(login_url='admin_login')  
+@staff_member_required(login_url='admin_login')
 def Productlist(request):
     if request.method == 'POST':
         search_query = request.POST.get('search')
@@ -101,7 +72,7 @@ def Productlist(request):
 
 
 # Category Management
-
+@staff_member_required(login_url='admin_login')
 def Add_category(request, category_id=None):
     category = None
     if request.method == 'POST':
@@ -134,7 +105,7 @@ def Add_category(request, category_id=None):
     categories = Category.objects.all()
     return render(request, 'adminside/add_category.html', {'categories': categories})
 
-
+@staff_member_required(login_url='admin_login')
 def Edit_category(request, category_id):
     category = get_object_or_404(Category, id=category_id)
 
@@ -153,36 +124,14 @@ def Edit_category(request, category_id):
 
     return render(request, 'adminside/adm_cate_edit.html', {'category': category})
 
+@staff_member_required(login_url='admin_login')
 def delete_category(request, category_id):
     category = get_object_or_404(Category, id=category_id)
     category.soft_delete()
     return redirect('add_category')
 
 # product management::--
-
-# def Admin_edit(request,id):
-#     product = Product.objects.get(id=id)
-#     category = Category.objects.all()
-#     productCat = product.category
-
-#     if request.method == 'POST':
-#         category_name = request.POST.get('category')
-        
-#         try:
-#             category = Category.objects.get(id=category_name)
-#             # product.category = category
-#             product = Product.objects.get(id=id)
-#         except Category.DoesNotExist:
-#             pass
-
-#         product.Name = request.POST['name']
-#         product.quantity = request.POST['quantity']
-#         product.price = request.POST['price']
-
-#         product.save()
-#         return redirect('productview')
-    
-#     return render(request,'admin_edit.html',{'editpro':product,'cat': category,'prodcat':productCat})   
+@staff_member_required(login_url='admin_login') 
 def Admin_edit(request, id):
     product = get_object_or_404(Product, id=id)
     categories = Category.objects.all()
@@ -219,7 +168,7 @@ def Admin_edit(request, id):
 
     return render(request, 'adminside/admin_edit.html', {'editpro': product, 'cat': categories})
 
-
+@staff_member_required(login_url='admin_login')
 def Admin_delete(request,id):
     product = get_object_or_404(Product, id=id)
     product.deleted = True
@@ -259,6 +208,8 @@ def Admin_delete(request,id):
 #     return render(request,'adminside/addproduct.html', {'category' : cat})
 
 # -------------------------------------------------------------------------------------
+
+@staff_member_required(login_url='admin_login')
 def Add_product(request):
     if request.method == 'POST':
         Name = request.POST['name']
@@ -380,61 +331,89 @@ def Add_product(request):
 #     return render(request, 'adminside/addproduct.html', {'category': cat})
 
 
-# order management and update status
-def order_management(request):
-    order = Order.objects.all()
-    return render(request, 'adminside/admin_orderstatus.html',{'order': order})
-def update_order_status(request, order_id):
-    order = get_object_or_404(Order, id=order_id)
+# order management and update status 
+# @staff_member_required(login_url='admin_login')
+# def order_management(request):
+#     order = Order.objects.all()
+#     return render(request, 'adminside/admin_orderstatus.html',{'order': order})
 
-    if request.method == 'POST':
-        new_status = request.POST.get('status')
-        order.status = new_status
-        order.save()
-
-    return redirect('order_management')
 
 # def update_order_status(request, order_id):
 #     order = get_object_or_404(Order, id=order_id)
-
 #     if request.method == 'POST':
 #         new_status = request.POST.get('status')
-
-#         if new_status == 'Delivered':
-#             order.status = new_status
-#             order.delivered = True  
-#             order.save()
-#         else:
-#             order.status = new_status
-#             order.save()
+#         order.status = new_status
+#         order.save()
 
 #     return redirect('order_management')
 
+
+@staff_member_required(login_url='admin_login')
+def order_management(request):
+    order = Order.objects.all()
+    return render(request, 'adminside/admin_orderstatus.html', {'order': order})
+
+
+from decimal import Decimal
+from django.db import transaction
+
+def update_order_status(request, order_id):
+    order = get_object_or_404(Order, id=order_id)
+    if request.method == 'POST':
+        new_status = request.POST.get('status')
+        if new_status == 'Reject':
+            if not order.cancel:
+                order.status = new_status
+                order.cancel = True
+                order.save()
+
+                if order.payment_option == 'upi':
+                    with transaction.atomic():
+                        wallet, created = Wallet.objects.select_for_update().get_or_create(user=order.customer)
+                        wallet.balance = Decimal(str(wallet.balance))
+                        refund_amount = Decimal(str(order.total_amount))
+                        refund_transaction = Transaction.objects.create(
+                            user=order.customer,
+                            amount=refund_amount,
+                            transaction_type='Refund',
+                            transaction_balance=wallet.balance + refund_amount,
+                            related_order=order,
+                        )
+                        wallet.balance += refund_amount
+                        wallet.balance = float(wallet.balance)  
+                        wallet.save()
+        else:
+            order.status = new_status
+            order.save()
+    return redirect('order_management')
 
 
 
 
 # inventory stock
+
+@staff_member_required(login_url='admin_login')
 def stock_list(request):
     product = Product.objects.all()
     return render(request, 'adminside/admin_inventory.html', {'product':product})
 
 
-# user management
+# user management  
+@staff_member_required(login_url='admin_login')
 def user_management(request):
     users = Customer.objects.all()
     return render(request, 'adminside/admin_user_manage.html', {'users': users})
 
+
 def block_user(request, user_id):
-    # Retrieve the user by their ID
     user = Customer.objects.get(pk=user_id)
     user.is_active = False
     user.save()
     messages.success(request, f'User {user.first_name} {user.last_name} has been blocked.')
     return redirect('user_management')
 
+
 def unblock_user(request, user_id):
-    # Retrieve the user by their ID
     user = Customer.objects.get(pk=user_id)
     user.is_active = True
     user.save()
@@ -448,7 +427,6 @@ def unblock_user(request, user_id):
 def generate_pdf(request):
     template_path = 'adminside/sales_report_pdf.html'
 
-    # Get relevant data from your models
     orders = Order.objects.all()
     order_items = OrderItem.objects.select_related('product').all()
     customers = Customer.objects.all()
@@ -488,8 +466,6 @@ def Salesreport(request):
     formatted_years = []
     total_yearly_sales = []
     
-    
-    # Daily Sales Data
     if time_range == 'daily':
         daily_sales_data = Order.objects.annotate(
             order_date_day=TruncDate('order_date')
@@ -502,7 +478,6 @@ def Salesreport(request):
         sales_count = [entry['sales_count'] for entry in daily_sales_data]
         total_amounts = [float(entry['total_sales']) if entry['total_sales'] is not None else 0.0 for entry in daily_sales_data]
 
-    # Weekly Sales Data
     elif time_range == 'weekly':
         weekly_sales_data = Order.objects.annotate(
             order_date_week=TruncWeek('order_date')
@@ -514,7 +489,6 @@ def Salesreport(request):
         formatted_weeks = [date(entry['order_date_week'].year, entry['order_date_week'].month, entry['order_date_week'].day).strftime('%d-%B') for entry in weekly_sales_data]
         total_weekly_sales = [float(entry['total_sales']) for entry in weekly_sales_data]
 
-    # Monthly Sales Data
     elif time_range == 'monthly':
         monthly_sales_data = Order.objects.annotate(
             order_date_month=TruncMonth('order_date')
@@ -526,7 +500,6 @@ def Salesreport(request):
         formatted_months = [date(entry['order_date_month'].year, entry['order_date_month'].month, 1).strftime('%d-%B') for entry in monthly_sales_data]
         total_monthly_sales = [float(entry['total_sales']) for entry in monthly_sales_data]
 
-    # Yearly Sales Data
     elif time_range == 'yearly':
         yearly_sales_data = Order.objects.annotate(
             order_date_year=TruncYear('order_date', output_field=DateTimeField())

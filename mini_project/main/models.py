@@ -1,6 +1,7 @@
 # from ctypes import addressof
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.db import models
+# from django.core.validators import RegexValidator
 
 
 class CustomUserManager(BaseUserManager):
@@ -28,7 +29,9 @@ class Address(models.Model):
     customer = models.ForeignKey('Customer', on_delete=models.CASCADE, related_name='addresses')
     address = models.CharField(max_length=100)
     city = models.CharField(max_length=100)
+  
     postalcode= models.IntegerField(default=1)
+    phone_number = models.CharField(max_length=15, default='')
 
     def __str__(self):
         return f"{self.address}"
@@ -117,6 +120,12 @@ class Order(models.Model):
         ('Delivered', 'Delivered'),
         ('Return', 'Return'),
         ('Reject', 'Reject'),
+    ]
+
+    PAYMENT_OPTIONS = [
+        ('cod', 'Cash On Delivery'),
+        ('razorpay', 'Razorpay'),
+        
     ]
     payment_option = models.CharField(max_length=225,default='cod')
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Pending')

@@ -45,7 +45,9 @@
 
 		}
 
-		.col-lg-4 {}
+		.hide-elem {
+			visibility: hidden;
+		}
 	</style>
 </head>
 
@@ -72,10 +74,8 @@
 						<ul class="nav navbar-nav menu_nav ml-auto">
 							<li class="nav-item active"><a class="nav-link" href="{% url 'home' %}">Home</a>
 							</li>
-							<!-- <li class="nav-item submenu dropdown">
-								<a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button"
-									aria-haspopup="true" aria-expanded="false">Shop</a>
-							</li> -->
+							<li class="nav-item "><a class="nav-link" href="{% url 'Shop' %}">Shop</a>
+							</li>
 
 							<li class="nav-item"><a class="nav-link" href="{% url 'userprofile' %}">Profile</a></li>
 
@@ -91,11 +91,14 @@
 
 						</ul>
 						<ul class="nav navbar-nav navbar-right">
-							<li class="nav-item"><a href="{% url 'cart' %}" class="cart"><span class="ti-bag"></span></a></li>
-							<li class="nav-item"><a href="{% url 'wallet_view' %}" class="wallet"><span class="ti-wallet"></span></a></li>
+							<li class="nav-item"><a href="{% url 'cart' %}" class="cart"><span
+										class="ti-bag"></span></a></li>
+							<li class="nav-item"><a href="{% url 'wallet_view' %}" class="wallet"><span
+										class="ti-wallet"></span></a></li>
 						</ul>
 						<ul class="nav navbar-nav navbar-right">
-							<li class="nav-item"><a href="{% url 'wishlist' %}" class="wishlist"><span class="lnr lnr-heart"></span></a></li>
+							<li class="nav-item"><a href="{% url 'wishlist' %}" class="wishlist"><span
+										class="lnr lnr-heart"></span></a></li>
 							<li class="nav-item">
 								<button class="search"><span class="lnr lnr-magnifier" id="search"></span></button>
 							</li>
@@ -136,7 +139,6 @@
 		<div class="center-container my-5" style="height: inherit;">
 			<div class="col-lg-4">
 				<div class="order_box">
-
 					<h2>Your Order</h2>
 					<h5>Shipping Address</h5>
 
@@ -151,7 +153,7 @@
 							</tr>
 						</thead>
 						<tbody>
-							{% for item in order_items %}
+							{% for item in items %}
 							<tr>
 								<td>
 									<div class="media-body">
@@ -178,44 +180,29 @@
 						<li><a href="#">Shipping <span>Flat rate:Rs.50.00</span></a></li>
 						<li><a href="#">Total <span>Rs.{{ total|floatformat:2 }}</span></a></li>
 					</ul>
-
+					<form action="{% url 'checkout' %}" method="post">
+						{% csrf_token %}
 					{% if address %}
-						<div class="payment_item">
-							<label for="f-option5" style="font-size: 18px; color: #333;">Check payments</label>
-							<div  style="margin-top: 10px;">
-								<button id="rzp-button1" style="background-color: #4CAF50; /* Green */
-								border: none;
-								color: white;
-								padding: 15px 32px;
-								text-align: center;
-								text-decoration: none;
-								display: inline-block;
-								font-size: 16px;
-								margin: 4px 2px;
-								cursor: pointer;">
-								Pay by Razor
-								</button>
-								<div class="check" style="background-color: #b4813b;"></div>
-							</div>
-						</div>
-						<button  style="background-color: #4CAF50; /* Green */
-								border: none;
-								color: white;
-								padding: 15px 32px;
-								text-align: center;
-								text-decoration: none;
-								display: inline-block;
-								font-size: 16px;
-								margin: 4px 2px;
-								cursor: pointer;">
-							Cash on delivery
-						</button>
+					<h2>Select Payment Method</h2>
+
+					<label>
+						<input type="radio" name="payment_method" value="cod" id="codBtn" checked>
+						Cash on Delivery (COD)
+					</label>
+
+					<label>
+						<input type="radio" name="payment_method" id="upiBtn" value="upi">
+						UPI Payment
+					</label>
+					
+					<button class="primary-btn" type="submit">Proceed </button>
+				</form>
 					{% else %}
 					<p class="text-danger">Please enter a valid address</p>
 					{% endif %}
-					<a class="primary-btn" href="{% url 'order_success' order.id %}">Proceed </a>
-
+					
 				</div>
+
 			</div>
 		</div>
 	</div>
@@ -267,7 +254,6 @@
 				<p class="footer-text m-0">
 					Copyright &copy;
 					<script>document.write(new Date().getFullYear());</script> All rights reserved | AGILE AVENGERS
-
 				</p>
 			</div>
 		</div>
@@ -292,40 +278,6 @@
 	<script src="{% static 'js/main.js' %}"></script>
 
 
-	<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-	<script>
-		var options = {
-			"key": "{{ razorpay_key }}",
-			"amount": "50000",
-			"currency": "INR",
-			"name": "agile avengers",
-			"description": "order payment",
-			"image": "https://example.com/your_logo",
-			"order_id": "{{ razorpay_order_id }}",
-			"callback_url": "{% url 'payment_success' %}",
-			"prefill": {
-				"name": "jisha",
-				"email": "gaurav.kumar@example.com",
-				"contact": "9000090000"
-			},
-			"notes": {
-				"address": "Razorpay Corporate Office"
-			},
-			"theme": {
-				"color": "#3399cc"
-			}
-		};
-		var rzp1 = new Razorpay(options);
-		document.getElementById('rzp-button1').onclick = function (e) {
-			rzp1.open();
-			e.preventDefault();
-		}
-	</script>
-
-
 </body>
 
 </html>
-
-
-

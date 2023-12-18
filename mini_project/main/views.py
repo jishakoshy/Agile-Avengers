@@ -24,57 +24,37 @@ import string
 from .otpfun import sent_otp
 from django.http import JsonResponse
 import razorpay,json
-from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
+from django.conf import settings
+
+from django.contrib.sites.shortcuts import get_current_site  
+from django.utils.encoding import force_bytes
+from django.utils.encoding import force_str
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode  
+from django.template.loader import render_to_string  
+# from .tokens import account_activation_token  
+from django.contrib.auth.models import User  
+from django.core.mail import EmailMessage  
+from django.contrib.auth import get_user_model
+from django.http import HttpResponse
 
 
-# Otp view
-@never_cache
-def verify_otp(request):
-    if request.method == 'POST':
-        verify_otp = request.POST.get('otp')
 
-        if 'username' in request.session:
-            username = request.session['username']
-        else:
-            messages.error(request, 'Username not found in session')
-            return redirect('loginn')
+# def activate(request, uidb64, token):  
+#     User = get_user_model()  
+#     try:  
+#         uid = force_str(urlsafe_base64_decode(uidb64))  
+#         user = User.objects.get(pk=uid)  
+#     except(TypeError, ValueError, OverflowError, User.DoesNotExist):  
+#         user = None  
+#     if user is not None and account_activation_token.check_token(user, token):  
+#         user.is_active = True  
+#         user.save()  
+#         return HttpResponse('Thank you for your email confirmation. Now you can login your account.')  
+#     else:  
+#         return HttpResponse('Activation link is invalid!') 
 
-        otp_secret_key = request.session['otp_secret_key']
-        otp_valid_until = request.session['otp_valid_date']
 
-        password_reset_otp = request.GET.get('password_reset')
-        print(f'password_reset_otp: {password_reset_otp}')
-        if password_reset_otp:
-            # Handle OTP for password reset
-            if sent_otp(request):  # Send OTP for password reset
-                # Store the username and OTP secret for password reset
-                request.session['username_for_reset'] = username
-                request.session['otp_secret_key_for_reset'] = otp_secret_key
-                return render(request, 'password_reset.html', {'otp_sent': True})
-            else:
-                messages.error(request, 'Error sending OTP for password reset')
-                return redirect('loginn')  # Redirect back to login if OTP sending fails
-
-        # Handle OTP for login
-        if otp_secret_key and otp_valid_until:
-            valid_until = datetime.fromisoformat(otp_valid_until)
-            if valid_until > datetime.now():
-                totp = pyotp.TOTP(otp_secret_key, interval=60)
-                if totp.verify(verify_otp):
-                    user = get_object_or_404(Customer, email=username)
-                    login(request, user)
-                    del request.session['otp_secret_key']
-                    del request.session['otp_valid_date']
-                    return redirect('home')
-                else:
-                    messages.error(request, 'Invalid one time password')
-            else:
-                messages.error(request, 'one time password expired')
-        else:
-            messages.error(request, 'something went wrong')
-
-    return render(request, 'userside/otp.html')
 
 # Otp view
 # @never_cache
@@ -86,29 +66,73 @@ def verify_otp(request):
 #             username = request.session['username']
 #         else:
 #             messages.error(request, 'Username not found in session')
-#             return redirect('user_view')
+#             return redirect('loginn')
 
 #         otp_secret_key = request.session['otp_secret_key']
 #         otp_valid_until = request.session['otp_valid_date']
 #         if otp_secret_key and otp_valid_until:
 #             valid_until = datetime.fromisoformat(otp_valid_until)
 #             if valid_until > datetime.now():
-#                 totp = pyotp.TOTP(otp_secret_key, interval = 60)
-#                 if totp.verify(verify_otp):
-#                     user = get_object_or_404(oddityFindsUser, email = username)
+#                 totp = pyotp.TOTP(otp_secret_key, interval=60)
+#                 print("Generated OTP:", totp.now())
+#                 print("Entered OTP:", verify_otp)
+
+#                 if verify_otp and totp.verify(verify_otp):
+#                     user = get_object_or_404(Customer, email=username)
 #                     login(request, user)
 #                     del request.session['otp_secret_key']
 #                     del request.session['otp_valid_date']
 #                     return redirect('home')
 #                 else:
-#                     messages.error(request, 'Invalid one time password')                    
+#                     messages.error(request, 'Invalid one-time password')                    
 #             else:
-#                 messages.error(request, 'one time password expired')
+#                 messages.error(request, 'One-time password expired')
 #         else:
-#             messages.error(request, 'something went wrong')
-#     return render(request, 'otp.html')
+#             messages.error(request, 'Something went wrong')
+#     return render(request, 'userside/otp.html')
+
+# def loginn(request):  
+#     if request.method == 'POST':
+#         username = request.POST['email']
+#         password = request.POST['password']
+
+#         user = authenticate(request, email=username, password=password)
+
+#         if user is not None:
+#             print("User found")               
+#             if user.is_active:
+#                 print("User active")
+#                 if sent_otp(request):
+#                     print("OTP sent")
+#                     request.session['username'] = username
+#                     return redirect('verify_otp')
+#             else:
+#                 messages.error(request, 'You are blocked')          
+#         else:
+#             messages.error(request, 'Invalid email or password.')
+
+#     return render(request, 'userside/login.html')
 
 
+def loginn(request):  
+    if request.method == 'POST':
+        username = request.POST['email']
+        password = request.POST['password']
+
+        user = authenticate(request, email=username, password=password)
+
+        if user is not None:
+            print("User found")               
+            if user.is_active:
+                login(request, user)
+                request.session['username'] = username
+                return redirect('home')
+            else:
+                messages.error(request, 'You are blocked')          
+        else:
+            messages.error(request, 'Invalid email or password.')
+
+    return render(request, 'userside/login.html')
 
 def Sign_up(request):
     if request.method == 'POST':
@@ -145,30 +169,32 @@ def Sign_up(request):
 
 
 # User login:--------------------------------------|||||
-def loginn(request):  
-    if request.method == 'POST':
-        username = request.POST['email']
-        password = request.POST['password']
+# def loginn(request):  
+#     if request.method == 'POST':
+#         username = request.POST['email']
+#         password = request.POST['password']
 
-        user = authenticate(request, email=username, password = password)
+#         user = authenticate(request, email=username, password = password)
 
-        if user is not None:
-            print("user found")               
-            if user.is_active:
-                print("user Active")
-                if sent_otp(request):
-                    print("Otp sent")
-                    request.session['username'] = username
-                    return redirect('verify_otp')
-            else:
-                messages.error(request, 'you are blocked')          
-        else:
-            messages.error(request, 'Invalid email or password.')
+#         if user is not None:
+#             print("user found")               
+#             if user.is_active:
+#                 print("user Active")
+#                 if sent_otp(request):
+#                     print("Otp sent")
+#                     request.session['username'] = username
+#                     return redirect('verify_otp')
+#             else:
+#                 messages.error(request, 'you are blocked')          
+#         else:
+#             messages.error(request, 'Invalid email or password.')
 
-    return render(request, 'userside/login.html')
+#     return render(request, 'userside/login.html')
 
 
 def Home(request):
+    api_key = settings.API_KEY
+    print(api_key)
     product = Product.objects.filter(deleted=False, is_varient = False)
     return render(request,'userside/home.html', {'products':product})
 
@@ -242,6 +268,7 @@ def add_to_cart(request, product_id):
 
     return redirect('home')  
 
+@login_required
 # wishlist
 def wishlist_view(request):
     if request.user.is_authenticated:       
@@ -287,17 +314,24 @@ def remove_from_cart(request, product_id):
     cart_item.delete()
     return redirect('cart')
 
-def update_quantity(request, product_id):
-    product = Product.objects.get(pk=product_id)
+def update_quantity(request, product_id,quantity):
+    
+    print(product_id,quantity)
+    product = Product.objects.get(id=product_id)
+
+    print(product.quantity)
     cart = Cart.objects.get(user=request.user, product=product)
-    quantity = int(request.GET.get('quantity'))
    
     cart.quantity = quantity
+    if quantity > product.quantity:
+        messages.warning(request,"limit exceeded")
     cart.save()
-    return redirect('cart')
+    return JsonResponse({'success': True, 'quantity':product.quantity})
+
 
 
 # ------------------------quantity updation on admin happening here-----------
+# checkout
 from django.db import transaction
 
 @login_required
@@ -307,98 +341,92 @@ def checkout_view(request):
     subtotal = sum(item.product.price * item.quantity for item in cart_items)
     shipping = Decimal('50.00')
     total = subtotal + shipping
-    payment_method = request.GET.get('payment_method','cod')
+    if request.method == "POST":
+        payment = request.POST['payment_method']
+        if payment == 'cod':
+            order = Order.objects.create(customer=request.user, total_amount=total, payment_option=payment)
 
-    with transaction.atomic():
-        order = Order.objects.create(customer=request.user, total_amount=total, payment_option=payment_method)
+            order_items = []
+            for cart_item in cart_items:
+                OrderItem.objects.create(order=order, product=cart_item.product, quantity=cart_item.quantity,
+                                        product_price=cart_item.product.price)
+                product = Product.objects.get(id=cart_item.product.id)
+                product.quantity -= cart_item.quantity
+                product.save()
 
-        order_items = [] 
-        for cart_item in cart_items:
-            OrderItem.objects.create(order=order, product=cart_item.product, quantity=cart_item.quantity,
-                                     product_price=cart_item.product.price)
-            product = Product.objects.get(id=cart_item.product.id)
-            product.quantity -= cart_item.quantity
-            product.save()
+                order_items.append({
+                    'product_name': cart_item.product.Name,  
+                    'quantity': cart_item.quantity,            
+                })
 
-            order_items.append({
-                'product_name': cart_item.product.Name,  
-                'quantity': cart_item.quantity,            
-            })
-
-        cart_items.delete()
-
-        # razorpay
-        client = razorpay.Client(auth=(settings.RAZORPAY_API_KEY, settings.RAZORPAY_API_SECRET_KEY))
-        razorpay_order = client.order.create({
-            'amount': int(total * 100),
-            'currency': 'INR',
-            'payment_capture': 1
-        })
-
-
-        order.razorpay_order_id = razorpay_order['id']
-        # order.payment_option= 'upi'
-        order.save()
-        
-
+            cart_items.delete()
+            return redirect('payment_success')
+        else:
+            return redirect('payment')
+            
     context = {
+        'items':cart_items,
         'address': address,
         'subtotal': subtotal,
         'shipping': shipping,
         'total': total,
-        'payment_method': payment_method,
-        'order': order,
-        'order_items': order_items,  
-        'razorpay_order_id': razorpay_order['id'],
-        'razorpay_key': settings.RAZORPAY_API_KEY,
     }
-
     return render(request, 'userside/checkout.html', context)
 
 
-# @login_required
-# def checkout_view(request):
-#     cart_items = Cart.objects.filter(user=request.user)
-#     address = Address.objects.filter(customer=request.user).first()
-#     subtotal = sum(item.product.price * item.quantity for item in cart_items)
-#     shipping = Decimal('50.00')
-#     total = subtotal + shipping
-#     payment_method = request.GET.get('payment_method','cod')
+def payment(request):
+    cart_items = Cart.objects.filter(user=request.user)
+    subtotal = sum(item.product.price * item.quantity for item in cart_items)
+    shipping = Decimal('50.00')
+    total = subtotal + shipping
     
-#     with transaction.atomic():
-#         order = Order.objects.create(customer=request.user, total_amount=total, payment_method=payment_method)
+    
+    # razorpay
+    client = razorpay.Client(auth=(settings.RAZORPAY_API_KEY, settings.RAZORPAY_API_SECRET_KEY))
+    razorpay_order = client.order.create({
+        'amount': int(total * 100),
+        'currency': 'INR',
+        'payment_capture': 1
+    })
+        
+    context = {
+        'subtotal': subtotal,
+        'shipping': shipping,
+        'total': total,
+        'razorpay_order_id': razorpay_order['id'],
+        'razorpay_key': settings.RAZORPAY_API_KEY,
+    }
+    return render(request, 'userside/payment.html', context)
 
-#         for cart_item in cart_items:
-#             OrderItem.objects.create(order=order, product=cart_item.product, quantity=cart_item.quantity,
-#                                      product_price=cart_item.product.price)
-#             product = Product.objects.get(id=cart_item.product.id)
-#             product.quantity -= cart_item.quantity
-#             product.save()
 
-#         cart_items.delete()
-#         # razorpay
-#         client = razorpay.Client(auth=(settings.RAZORPAY_API_KEY, settings.RAZORPAY_API_SECRET_KEY))
-#         razorpay_order = client.order.create({
-#             'amount': int(total * 100),
-#             'currency': 'INR',
-#             'payment_capture': 1
-#         })
+@transaction.atomic
+@csrf_exempt
+def createorder(request):
+    cart_items = Cart.objects.filter(user=request.user)
+    subtotal = sum(item.product.price * item.quantity for item in cart_items)
+    shipping = Decimal('50.00')
+    total = subtotal + shipping
+    
+    order = Order.objects.create(customer=request.user, total_amount=total, payment_option='upi')
 
-#         order.razorpay_order_id = razorpay_order['id']
-#         order.save()
+    order_items = [] 
+    for cart_item in cart_items:
+        OrderItem.objects.create(order=order, product=cart_item.product, quantity=cart_item.quantity,
+                                    product_price=cart_item.product.price)
+        product = Product.objects.get(id=cart_item.product.id)
+        product.quantity -= cart_item.quantity
+        product.save()
 
-#     context = {
-#         'address': address,
-#         'subtotal': subtotal,
-#         'shipping': shipping,
-#         'total': total,
-#         'payment_method': payment_method,
-#         'order': order,
-#         'razorpay_order_id': razorpay_order['id'],
-#         'razorpay_key': settings.RAZORPAY_API_KEY,
-#     }
+        order_items.append({
+            'product_name': cart_item.product.Name,  
+            'quantity': cart_item.quantity,            
+        })
 
-#     return render(request, 'userside/checkout.html', context)
+    cart_items.delete()
+    return redirect('payment_success')
+
+
+
 
 @csrf_exempt
 def payment_success(request):
@@ -410,13 +438,10 @@ def payment_success(request):
 def orderaddress(request):
     user_addresses = request.user.addresses.all()  
     user = Customer.objects.get(email = request.user)
-    order = Order.objects.filter(customer=user).order_by('-order_date').first()
-    orderitem = OrderItem.objects.filter(order = order)
-    subtotal = order.total_amount - 50
+    cart_items = Cart.objects.filter(user=user)
+    subtotal = sum(item.product.price * item.quantity for item in cart_items)
     shipping = Decimal('50.00')
-    payment_method = 'upi'
     total = subtotal + shipping
-    razorpayid = order.razorpay_order_id
     if request.method == 'POST':
         selected_address_id = request.POST.get('selected_address')
         if selected_address_id:
@@ -424,19 +449,13 @@ def orderaddress(request):
 
             request.user.selected_address = selected_address 
             request.user.save()
-
-       
+      
         con = {
-            'item': orderitem,
+            'items': cart_items,
             'address':selected_address,
             'subtotal': subtotal ,
             'shipping': shipping,
             'total': total,
-            'payment_method': payment_method,
-            'order': order,
-            'order_items': orderitem,  
-            'razorpay_order_id': razorpayid ,
-            'razorpay_key': settings.RAZORPAY_API_KEY,
         }
 
         return render(request, 'userside/checkout.html', con)  
@@ -447,24 +466,27 @@ def orderaddress(request):
 
 
 
-
 def order_add_addre(request):
     user = request.user
     cus = Customer.objects.get(email = user)
-    if request.method == 'POST':
-        
+    if request.method == 'POST':       
         address = request.POST.get('address')
         city = request.POST.get('city')
         post = request.POST.get('postalCode')
-        # phone = request.POST.get('phone number')
+        if len(post) != 6 or len(set(post))== 1:
 
-        sav = Address.objects.create(customer=cus, address=address, city=city, postalcode=post)
+                messages.error(request, "Invalid zip code. Please enter a proper value.")
+                return render(request, 'userside/ord_add_address.html')
+        sav = Address.objects.create(customer=cus, address=address, city=city, postalcode=post )
         sav.save()
         return redirect('orderaddress') 
     return render(request,'userside/ord_add_address.html')
 
 
-# order management
+
+
+
+# order management of cod
 def order_success(request, order_id):
     order = Order.objects.get(id=order_id)
     order_items = order.items.all() 
@@ -476,6 +498,28 @@ def order_success(request, order_id):
 
 
 # cancel order and return order and wallet refund
+# def cancelorder(request, order_id):
+#     order = get_object_or_404(Order, id=order_id)
+
+#     if not order.cancel:
+#         order.cancel = True
+#         order.save()
+
+#         refund_amount = order.total_amount
+#         refund_transaction = Transaction.objects.create(
+#             user=request.user,
+#             amount=refund_amount,
+#             transaction_type='Refund',
+#             transaction_balance=request.user.wallet.balance + refund_amount,  
+#             related_order=order,
+#         )
+
+#         request.user.wallet.balance += refund_amount
+#         request.user.wallet.save()
+
+#     return redirect("userprofile")
+
+# for cancelorder view
 def cancelorder(request, order_id):
     order = get_object_or_404(Order, id=order_id)
 
@@ -485,16 +529,19 @@ def cancelorder(request, order_id):
 
         refund_amount = order.total_amount
         refund_transaction = Transaction.objects.create(
-            user=request.user,
+            user=order.customer,
             amount=refund_amount,
             transaction_type='Refund',
-            transaction_balance=request.user.wallet.balance + refund_amount,  
+            transaction_balance=order.customer.wallet.balance + refund_amount,
             related_order=order,
         )
 
-        request.user.wallet.balance += refund_amount
-        request.user.wallet.save()
+        order.customer.wallet.balance += refund_amount
+        order.customer.wallet.save()
+
     return redirect("userprofile")
+
+
 
 def return_order(request, order_id):
     order = get_object_or_404(Order, id=order_id)
@@ -511,7 +558,6 @@ def return_order(request, order_id):
             transaction_balance=request.user.wallet.balance + refund_amount,
             related_order=order,
         )
-
         request.user.wallet.balance += refund_amount
         request.user.wallet.save()
 
@@ -545,7 +591,6 @@ def user_edit(request):
         user.email = new_email
         user.phone_number = new_phone_number
         user.save()
-
         return redirect('userprofile')
 
     context = {
@@ -574,21 +619,52 @@ def add_addresses(request):
         return redirect('userprofile') 
     return render(request,'userside/2userprofile.html')
 # editing address
+# def edit_address(request, address_id):
+#     address = get_object_or_404(Address, id=address_id)
+
+#     if request.method == 'POST':
+#         new_address = request.POST.get('editAddress')
+#         new_city = request.POST.get('editCity')
+#         new_postalcode = request.POST.get('editPostalCode')
+#         if len(new_postalcode) != 6 or len(set(new_postalcode))== 1:
+
+#                 messages.error(request, "Invalid zip code. Please enter a proper value.")
+#                 return render(request, 'userside/userEditaddress.html')
+#         address.address = new_address
+#         address.city = new_city
+#         address.postalcode = new_postalcode
+#         address.save()
+
+#         return redirect('viewaddress')
+#     return render(request, 'userside/userEditaddress.html', {'address': address})
+
 def edit_address(request, address_id):
     address = get_object_or_404(Address, id=address_id)
 
     if request.method == 'POST':
         new_address = request.POST.get('editAddress')
         new_city = request.POST.get('editCity')
-        new_postalcode = request.POST.get('editPostalCode')
+        new_postalcode = request.POST.get('postalCode')
 
-        address.address = new_address
-        address.city = new_city
-        address.postalcode = new_postalcode
-        address.save()
+        # Check if 'editPostalCode' is not None
+        if new_postalcode is not None:
+            # Perform additional validation
+            if len(new_postalcode) != 6 or len(set(new_postalcode)) == 1:
+                messages.error(request, "Invalid zip code. Please enter a proper value.")
+                return render(request, 'userside/userEditaddress.html', {'address': address})
+            
+            # Update the address fields and save
+            address.address = new_address
+            address.city = new_city
+            address.postalcode = new_postalcode
+            address.save()
 
-        return redirect('viewaddress')
+            return redirect('viewaddress')
+
     return render(request, 'userside/userEditaddress.html', {'address': address})
+
+
+
 
 
 @login_required
@@ -612,6 +688,7 @@ def get_product_quantity(request, product_id, qty):
     return JsonResponse({'success': True, 'quantity': quantity})
 
 # wallet
+@login_required
 def wallet(request):
     user = request.user
     userd = Customer.objects.get(email=user)
@@ -663,6 +740,8 @@ def change_password(request):
         return redirect('change_password')
 
     return render(request, 'userside/change_password.html')
+
+
 
 
 

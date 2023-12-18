@@ -130,16 +130,17 @@
                     <td>
                       <span class="badge badge-success">{{ i.get_status_display }}</span>
                       <form method="post" action="{% url 'update_order_status' i.id %}">
-                          {% csrf_token %}
-                          <select name="status">
-                              {% for choice in i.STATUS_CHOICES %}
-                                  <option value="{{ choice.0 }}">{{ choice.1 }}</option>
-                              {% endfor %}
-                          </select>
-                          <button type="submit">Update Status</button>
+                        {% csrf_token %}
+                        <select name="status">
+                            {% for choice in i.STATUS_CHOICES %}
+                                <option value="{{ choice.0 }}">{{ choice.1 }}</option>
+                            {% endfor %}
+                            <!-- <option value="Reject">Reject</option> -->
+                        </select>
+                        <button type="submit">Update Status</button>
                       </form>
-                  </td>
-                </tr>
+                    </td>
+                  </tr>
               {% endfor %}                                
             </tbody>
         </table>

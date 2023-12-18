@@ -59,14 +59,14 @@
                                 </li>
                                 <li class="nav-item "><a class="nav-link" href="{% url 'Shop' %}">Shop</a>
                                 </li>
-                                <li class="nav-item"><a class="nav-link" href="{% url 'userprofile' %}">Profile</a></li>
+                                <li class="nav-item active"><a class="nav-link" href="{% url 'userprofile' %}">Profile</a></li>
     
                                 {% if request.user.is_authenticated %}
-                                    <li class="nav-item submenu dropdown">
+                                    <li class="nav-item ">
                                         <a href="{% url 'logout' %}" class="nav-link dropdown-toggle">Logout</a>
                                     </li>
                                 {% else %}
-                                    <li class="nav-item submenu dropdown">
+                                    <li class="nav-item active">
                                         <a href="{% url 'loginn' %}" class="nav-link dropdown-toggle">Login</a>
                                     </li>
                                 {% endif %}

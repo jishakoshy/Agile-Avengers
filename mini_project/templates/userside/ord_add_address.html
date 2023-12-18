@@ -110,8 +110,11 @@
     <div class="card mt-4">
         <ul class="list-group list-group-flush">
             <li class="list-group-item">
-                    <form action="{% url 'order_address' %}" method="post">
-                    {% csrf_token %}
+                    <div class="text-danger text-center">
+                    {% for message in messages %} <p>{{message}}</p> {% endfor %}
+                    </div>
+                <form action="{% url 'order_address' %}" method="post">
+                {% csrf_token %}
                     <!-- <h6>Profile Settings</h6> -->
                 
                     
@@ -125,12 +128,18 @@
                     </div>
                     <div class="form-group">
                         <label for="postalCode">Postal Code</label>
-                        <input type="text" id="postalCode" name="postalCode" class="form-control" placeholder="Postal Code">
+                        <input type="number" id="postalCode" name="PostalCode" class="form-control" placeholder="Postal Code">
                     </div>
+                    <!-- <div class="form-group">
+                        <label for="phoneNumber">Phone Number</label>
+                        <input type="text" id="phoneNumber" name="phoneNumber" class="form-control" placeholder="Your phone number">
+                    </div> -->
                     <button type="submit" class="btn btn-primary">Save Address</button>
                     
                 </form>
-
+                <div class="text-danger text-center">
+                    {% for message in messages %} <p>{{message}}</p> {% endfor %}
+                  </div>
                 </li>
             
             </ul>

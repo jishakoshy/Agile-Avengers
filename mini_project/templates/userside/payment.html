@@ -31,8 +31,20 @@
 	<link rel="stylesheet" href="{% static 'css/ion.rangeSlider.skinFlat.css' %}" />
 	<link rel="stylesheet" href="{% static 'css/magnific-popup.css' %}">
 	<link rel="stylesheet" href="{% static 'css/main.css' %}">
-	<!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">	
-	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous"> -->
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+		integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+	<style>
+		.center-container {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			height: 110vh;
+
+			width: 200vh;
+
+		}
+	</style>
 </head>
 
 <body>
@@ -58,40 +70,31 @@
 						<ul class="nav navbar-nav menu_nav ml-auto">
 							<li class="nav-item active"><a class="nav-link" href="{% url 'home' %}">Home</a>
 							</li>
-							<li class="nav-item submenu dropdown">
-								<a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button"
-									aria-haspopup="true" aria-expanded="false">Shop</a>
-								<!-- <ul class="dropdown-menu">
-									<li class="nav-item"><a class="nav-link" href="category.html">Shop Category</a></li>
-									<li class="nav-item"><a class="nav-link" href="single-product.html">Product
-											Details</a></li>
-									<li class="nav-item"><a class="nav-link" href="checkout.html">Product Checkout</a>
-									</li>
-									<li class="nav-item"><a class="nav-link" href="cart.html">Shopping Cart</a></li>
-									<li class="nav-item"><a class="nav-link" href="confirmation.html">Confirmation</a>
-									</li>
-								</ul> -->
+							<li class="nav-item "><a class="nav-link" href="{% url 'Shop' %}">Shop</a>
 							</li>
-							
+
 							<li class="nav-item"><a class="nav-link" href="{% url 'userprofile' %}">Profile</a></li>
 
 							{% if request.user.is_authenticated %}
-								<li class="nav-item submenu dropdown">
-									<a href="{% url 'logout' %}" class="nav-link dropdown-toggle">Logout</a>
-								</li>
+							<li class="nav-item submenu dropdown">
+								<a href="{% url 'logout' %}" class="nav-link dropdown-toggle">Logout</a>
+							</li>
 							{% else %}
-								<li class="nav-item submenu dropdown">
-									<a href="{% url 'loginn' %}" class="nav-link dropdown-toggle">Login</a>
-								</li>
+							<li class="nav-item submenu dropdown">
+								<a href="{% url 'loginn' %}" class="nav-link dropdown-toggle">Login</a>
+							</li>
 							{% endif %}
 
 						</ul>
 						<ul class="nav navbar-nav navbar-right">
-							<li class="nav-item"><a href="{% url 'cart' %}" class="cart"><span class="ti-bag"></span></a></li>
-							<li class="nav-item"><a href="{% url 'wallet_view' %}" class="wallet"><span class="ti-wallet"></span></a></li>
+							<li class="nav-item"><a href="{% url 'cart' %}" class="cart"><span
+										class="ti-bag"></span></a></li>
+							<li class="nav-item"><a href="{% url 'wallet_view' %}" class="wallet"><span
+										class="ti-wallet"></span></a></li>
 						</ul>
 						<ul class="nav navbar-nav navbar-right">
-							<li class="nav-item"><a href="{% url 'wishlist' %}" class="wishlist"><span class="lnr lnr-heart"></span></a></li>
+							<li class="nav-item"><a href="{% url 'wishlist' %}" class="wishlist"><span
+										class="lnr lnr-heart"></span></a></li>
 							<li class="nav-item">
 								<button class="search"><span class="lnr lnr-magnifier" id="search"></span></button>
 							</li>
@@ -100,7 +103,7 @@
 				</div>
 			</nav>
 		</div>
-		<!-- <div class="search_input" id="search_input_box">
+		<div class="search_input" id="search_input_box">
 			<div class="container">
 				<form class="d-flex justify-content-between" method="get" action="{% url 'search_products' %}">
 					<input type="text" name="q" class="form-control" id="search_input" placeholder="Search Here">
@@ -108,7 +111,7 @@
 					<span class="lnr lnr-cross" id="close_search" title="Close Search"></span>
 				</form>
 			</div>
-		</div> -->
+		</div>
 	</header>
 	<!-- End Header Area -->
 
@@ -117,49 +120,41 @@
 		<div class="container">
 			<div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
 				<div class="col-first">
-					<h1>Order Success </h1>
+					<h1>Payment</h1>
+
 				</div>
 			</div>
 		</div>
 	</section>
 	<!-- End Banner Area -->
 
-	<!--================Order Details Area =================-->
-	<section class="order_details section_gap">
-		<div class="container">
-			<h3 class="title_confirmation">Thank you. Your order has been received.</h3>
+	<!--================Checkout Area =================-->
+	<!-- <section class="checkout_area section_gap"> -->
+
+
+	
+
+		<div class="w-100 text-center py-5">			
+		<button id="rzp-button1" style="background-color: #4CAF50; /* Green */
+				border: none;
+				color: black;
+				padding: 15px 32px;
+				text-align: center;
+				text-decoration: none;
+				display:inline-block;
+				font-size: 16px;
+				margin: 4px 2px;
+				cursor: pointer;">
+			Pay by Razor
+		</button>
+
+	</div>
+	
+				
+
 			
-			<div class="order_details_table">
-				<h2>Order Details</h2>
-				<div class="table-responsive">
-					<table class="table">
-						<thead>
-							<tr>
-								<th scope="col">Product</th>
-								<th scope="col">Quantity</th>
-								<th scope="col">Total</th>
-							</tr>
-						</thead>
-						<tbody>
-                            {% for item in order_items %}
-                                <tr>
-                                    <td>{{ item.product.Name }}</td>
-                                    <td>{{ item.quantity }}</td>
-                                    <td>{{ item.product_price }}</td>
-                                </tr>
-                            {% endfor %}
-                        </tbody>
-					</table>
-					<div class="order-summary">
-                        <p>Subtotal: Rs.{{ order.subtotal|floatformat:2 }}</p>
-                        <p>Shipping: Rs.50</p>
-                        <p>Total: Rs.{{ order.total_amount|floatformat:2 }}</p>
-                    </div>
-				</div>
-			</div>
-		</div>
-	</section>
-	<!--================End Order Details Area =================-->
+		
+
 
 	<!-- start footer Area -->
 	<footer class="footer-area section_gap">
@@ -170,7 +165,8 @@
 						<h6>About Us</h6>
 						<p>
 							The beauty of the game is strength and technique and when you shorten the game,
-							technique goes for a toss and the quality of badminton will surely go down in this system.
+							technique goes for a toss and the quality of badminton will surely go down in this
+							system.
 						</p>
 					</div>
 				</div>
@@ -206,27 +202,69 @@
 				<p class="footer-text m-0">
 					Copyright &copy;
 					<script>document.write(new Date().getFullYear());</script> All rights reserved | AGILE AVENGERS
-
 				</p>
 			</div>
 		</div>
 	</footer>
+	<!-- End footer Area -->
 
 
-	<script src="js/vendor/jquery-2.2.4.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4"
-	 crossorigin="anonymous"></script>
-	<script src="js/vendor/bootstrap.min.js"></script>
-	<script src="js/jquery.ajaxchimp.min.js"></script>
-	<script src="js/jquery.nice-select.min.js"></script>
-	<script src="js/jquery.sticky.js"></script>
-	<script src="js/nouislider.min.js"></script>
-	<script src="js/jquery.magnific-popup.min.js"></script>
-	<script src="js/owl.carousel.min.js"></script>
+	<script src="{% static 'js/vendor/jquery-2.2.4.min.js' %}"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"
+		integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4"
+		crossorigin="anonymous"></script>
+	<script src="{% static 'js/vendor/bootstrap.min.js' %}"></script>
+	<script src="{% static 'js/jquery.ajaxchimp.min.js' %}"></script>
+	<script src="{% static 'js/jquery.nice-select.min.js' %}"></script>
+	<script src="{% static 'js/jquery.sticky.js' %}"></script>
+	<script src="{% static 'js/nouislider.min.js' %}"></script>
+	<script src="{% static 'js/jquery.magnific-popup.min.js' %}"></script>
+	<script src="{% static 'js/owl.carousel.min.js' %}"></script>
 	<!--gmaps Js-->
 	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCjCGmQ0Uq4exrzdcL6rvxywDDOvfAu6eE"></script>
-	<script src="js/gmaps.min.js"></script>
-	<script src="js/main.js"></script>
+	<script src="{% static 'js/gmaps.min.js' %}"></script>
+	<script src="{% static 'js/main.js' %}"></script>
+
+
+	<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+	<script>
+
+		var options = {
+			"key": "{{ razorpay_key }}",
+			"amount": "50000",
+			"currency": "INR",
+			"name": "agile avengers",
+			"description": "order payment",
+			"image": "https://example.com/your_logo",
+			"order_id": "{{ razorpay_order_id }}",
+			"callback_url": "{% url 'createorder' %}",
+			"prefill": {
+				"name": "jisha",
+				"email": "gaurav.kumar@example.com",
+				"contact": "9000090000"
+			},
+			"notes": {
+				"address": "Razorpay Corporate Office"
+			},
+			"theme": {
+				"color": "#3399cc"
+			}
+		};		
+		var rzp1 = new Razorpay(options);
+		document.getElementById('rzp-button1').onclick = function (e) {
+			rzp1.open();
+			e.preventDefault();
+		}
+
+		
+
+
+
+
+	</script>
+
+
+
 </body>
 
 </html>

@@ -23,12 +23,13 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-=5tgw3e_xt%^1p2)4*8)y3o!-0!c$-k%+jrpp+yi=tai5o%ufo'
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+SECRET_KEY = os.environ.get("SECRET_KEY")
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -87,7 +88,7 @@ DATABASES = {
         'HOST':'localhost',
         'PORT':'3306',
         'USER':'root',
-        'PASSWORD':'pass123',
+        'PASSWORD':os.environ.get("PASSWORD"),
     }
 }
 
@@ -148,6 +149,19 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static/')]
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-RAZORPAY_API_KEY = 'rzp_test_W6aCd1nJY1haEF'
-RAZORPAY_API_SECRET_KEY = 'ZL4ysLZt0Q109XJppvvT5grA'
+RAZORPAY_API_KEY = os.environ.get("RAZORPAY_API_KEY")
+RAZORPAY_API_SECRET_KEY = os.environ.get("RAZORPAY_API_SECRET_KEY")
+
+
+# forgot password
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_PORT = 587  
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER =  os.environ.get("EMAIL_HOST_USER")
+EMAIL_PASSWORD =  os.environ.get("EMAIL_PASSWORD")
+
+# EMAIL_HOST_USER = ''
+# EMAIL_PASSWORD ='scoqmgycdgzssznh'
+
 

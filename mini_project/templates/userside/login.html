@@ -59,7 +59,7 @@
                   </div>
                   {% endfor %} -->
                     {% for message in messages %}<p class="small fw-bold mt-2 pt-1 mb-0 alert">{{ message }}</p>{% endfor %}
-                    <a class="small text-muted" href="{% url 'verify_otp' %}" class="link-danger">Forgot password?</a>
+                    <a class="small text-muted" href="{% url 'reset_password' %}" class="link-danger">Forgot password?</a>
                     <p class="mb-5 pb-lg-2" style="color: #393f81;">Don't have an account? <a href="{% url 'sign_up' %}"
                         style="color: #232fb7;">Register here</a></p>
                     <a class="mb-5 pb-lg-2" href="{% url 'admin_login' %}" style="color: #293185;">Admin Login</a>

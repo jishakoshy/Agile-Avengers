@@ -144,11 +144,11 @@
 								</td>
 								<td>
 									<div class="product_count">
-										<form method="get" action="{% url 'update_quantity' item.product.id %}">
-											<input type="number" onclick="updateQuantity(this,  '{{item.product.id }}')" name="quantity" min="1" max="{{item.product.quantity}}" value="{{ item.quantity }}" placeholder="{{ item.quantity }}" >
+										<!-- <form method="get" action="#"> -->
+											<input type="number" onclick="updateQuantity(this, '{{item.product.id }}')" name="quantity" min="1" max="{{item.product.quantity}}" value="{{ item.quantity }}" placeholder="{{ item.quantity }}" >
 											<p style="color: red;" class="limitMessage invisible">Quantity Limit exceeded</p>
-											<button type="submit">Update</button>
-										</form>
+											<!-- <button type="submit">Update</button> -->
+										<!-- </form> -->
 									</div>
 								</td>
 								<td>
@@ -286,18 +286,17 @@
 	<script src="{% static 'js/main.js' %}"></script>
 
     <script>
-        // Function to remove a product from the cart
         function removeProduct(button) {
             var row = button.closest("tr");
-            row.remove(); // Remove the entire row
+            row.remove(); 
         }
-
 		function updateQuantity(elem , id){
 
+			console.log(elem,id)
 			let parent = elem.parentElement
 			let limitMessage = parent.querySelector('.limitMessage')
 			let quantity = Number(elem.value)
-			fetch(`/product/quantity/${id}/${quantity}`)
+			fetch(`/update_quantity/${id}/${quantity}`)
 			.then(res => res.json())
 			.then((res)=>{
 				if(res.success){
@@ -311,7 +310,9 @@
 				}else{
 					throw 'so error occured'
 				}
-			})
+			}).catch((err)=> {
+				console.log('b4 error')
+				console.log(err)})
 		}
     </script>
 
