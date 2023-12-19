@@ -193,8 +193,7 @@ def Sign_up(request):
 
 
 def Home(request):
-    api_key = settings.API_KEY
-    print(api_key)
+    
     product = Product.objects.filter(deleted=False, is_varient = False)
     return render(request,'userside/home.html', {'products':product})
 
@@ -472,11 +471,11 @@ def order_add_addre(request):
     if request.method == 'POST':       
         address = request.POST.get('address')
         city = request.POST.get('city')
-        post = request.POST.get('postalCode')
+        post = request.POST.get('PostalCode')
         if len(post) != 6 or len(set(post))== 1:
 
-                messages.error(request, "Invalid zip code. Please enter a proper value.")
-                return render(request, 'userside/ord_add_address.html')
+            messages.error(request, "Invalid zip code. Please enter a proper value.")
+            return render(request, 'userside/ord_add_address.html')
         sav = Address.objects.create(customer=cus, address=address, city=city, postalcode=post )
         sav.save()
         return redirect('orderaddress') 
