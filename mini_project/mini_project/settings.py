@@ -122,13 +122,13 @@ AUTH_USER_MODEL = 'main.Customer'
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
+
 LANGUAGE_CODE = 'en-us'
-
-TIME_ZONE = 'UTC'
-
+# TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Kolkata'
 USE_I18N = True
-
 USE_TZ = True
+
 
 # settings.py
 
@@ -162,7 +162,10 @@ EMAIL_HOST = "smtp.gmail.com"
 EMAIL_PORT = 587  
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = "jishakmadathil@gmail.com"
-EMAIL_PASSWORD = "qqljyfydqcwrsouf"
+EMAIL_HOST_PASSWORD = "qqlj yfyd qcwr souf"
+DEFAULT_FROM_EMAIL = 'jishakmadathil@gmail.com'
+
+
 # EMAIL_HOST_USER =  os.environ.get("EMAIL_HOST_USER")
 # EMAIL_PASSWORD =  os.environ.get("EMAIL_PASSWORD")
 

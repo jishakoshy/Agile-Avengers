@@ -141,7 +141,7 @@
 						
 					</ul>
 
-					<form method="get" action="{% url 'filter_products_by_price' %}">
+					<!-- <form method="get" action="{% url 'filter_products_by_price' %}">
 						<div class="head">Price</div>
 						<div class="form-group">
 							<label for="min_price">Min Price:</label>
@@ -152,21 +152,22 @@
 							<input type="number" name="max_price" class="form-control" id="max_price">
 						</div>
 						<button type="submit" class="btn btn-primary">Filter</button>
-					</form>
+					</form> -->
 
-					<!-- <div class="sidebar-categories">
-						<div class="head">Price</div>
-						<ul class="main-categories">
-							<li class="main-nav-list">
-								<a href="{% url 'category_filter' category_id=1 %}">Min_price<span class="number"></span></a>
-							</li>
-													
-							<li class="main-nav-list">
-								<a href="{% url 'category_filter' category_id=2 %}">Max_price<span class="number"></span></a>
-							</li>
-							
-						</ul>
-					</div> -->
+					<form method="get" action="{% url 'filter_products_by_price' %}">
+						<!-- <input type="text" name="q" placeholder="Search products"> -->
+						<input type="hidden" name="category_id" value="{{ selected_category.id }}" />
+						<div class="form-group">
+							<label for="min_price">Min Price:</label>
+							<input type="number" name="min_price" class="form-control" id="min_price">
+						</div>
+						<div class="form-group">
+							<label for="max_price">Max Price:</label>
+							<input type="number" name="max_price" class="form-control" id="max_price">
+						</div>
+						<button type="submit" class="btn btn-primary">Filter</button>
+					</form>
+					
 				</div>
 				
 			</div>

@@ -131,6 +131,41 @@ def delete_category(request, category_id):
     return redirect('add_category')
 
 # product management::--
+# @staff_member_required(login_url='admin_login') 
+# def Admin_edit(request, id):
+#     product = get_object_or_404(Product, id=id)
+#     categories = Category.objects.all()
+#     if request.method == 'POST':
+#         category_id = request.POST.get('category')
+
+#         try:
+#             selected_category = Category.objects.get(id=category_id)
+#         except Category.DoesNotExist:
+#             selected_category = None
+#         product.Name = request.POST['name']
+#         product.quantity = request.POST['quantity']
+#         try:
+#             price = float(request.POST['price'])
+#             if price < 0:
+#                 raise ValueError("Price must be greater than or equal to zero.")
+#             quantity = int(request.POST['quantity'])
+#             if quantity < 0:
+#                 raise ValueError("Quantity must be greater than or equal to zero.")
+
+#             size = request.POST['size'] 
+#             product.price = price
+#             product.quantity = quantity
+#             product.size = size
+#         except ValueError as e:
+#             return render(request, 'adminside/admin_edit.html', {'editpro': product, 'cat': categories, 'error_message': str(e)})
+#         if selected_category:
+#             product.category = selected_category
+#         product.save()
+#         return redirect('productview')
+
+#     return render(request, 'adminside/admin_edit.html', {'editpro': product, 'cat': categories})
+
+
 @staff_member_required(login_url='admin_login') 
 def Admin_edit(request, id):
     product = get_object_or_404(Product, id=id)
@@ -138,25 +173,28 @@ def Admin_edit(request, id):
 
     if request.method == 'POST':
         category_id = request.POST.get('category')
-
         try:
             selected_category = Category.objects.get(id=category_id)
         except Category.DoesNotExist:
             selected_category = None
-
         product.Name = request.POST['name']
         product.quantity = request.POST['quantity']
-
         try:
             price = float(request.POST['price'])
             if price < 0:
                 raise ValueError("Price must be greater than or equal to zero.")
             quantity = int(request.POST['quantity'])
-
             if quantity < 0:
                 raise ValueError("Quantity must be greater than or equal to zero.")
+            if selected_category and selected_category.Name == 'Shoes':
+                size = request.POST['size']
+            else:
+                size = None
+
             product.price = price
             product.quantity = quantity
+            product.size = size
+
         except ValueError as e:
             return render(request, 'adminside/admin_edit.html', {'editpro': product, 'cat': categories, 'error_message': str(e)})
 
@@ -167,6 +205,7 @@ def Admin_edit(request, id):
         return redirect('productview')
 
     return render(request, 'adminside/admin_edit.html', {'editpro': product, 'cat': categories})
+
 
 @staff_member_required(login_url='admin_login')
 def Admin_delete(request,id):
@@ -390,18 +429,17 @@ def update_order_status(request, order_id):
 
 
 
-# inventory stock
-
+# inventory stock---------------
 @staff_member_required(login_url='admin_login')
 def stock_list(request):
     product = Product.objects.all()
     return render(request, 'adminside/admin_inventory.html', {'product':product})
 
 
-# user management  
+# user management---------------  
 @staff_member_required(login_url='admin_login')
 def user_management(request):
-    users = Customer.objects.all()
+    users = Customer.objects.filter(is_staff=False)
     return render(request, 'adminside/admin_user_manage.html', {'users': users})
 
 
@@ -474,7 +512,12 @@ def Salesreport(request):
             sales_count=Count('id')
         ).order_by('order_date_day')
 
-        formatted_dates = [entry['order_date_day'].strftime('%d-%B') for entry in daily_sales_data]
+        # formatted_dates = [entry['order_date_day'].strftime('%d-%B') for entry in daily_sales_data]
+        formatted_dates = [
+            entry['order_date_day'].strftime('%d-%B') if entry['order_date_day'] is not None else 'N/A'
+            for entry in daily_sales_data
+        ]
+
         sales_count = [entry['sales_count'] for entry in daily_sales_data]
         total_amounts = [float(entry['total_sales']) if entry['total_sales'] is not None else 0.0 for entry in daily_sales_data]
 

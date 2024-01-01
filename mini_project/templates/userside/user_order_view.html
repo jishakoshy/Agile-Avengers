@@ -142,7 +142,9 @@
                             
                                             <div>
                                                 <p><strong>Product Name: </strong>{{ item.product.Name }}</p>
-                                                <p><strong>Size:</strong> {{ item.product.size }}</p>
+                                                {% if item.product.category.Name == "Shoes" %}
+                                                    <p><strong>Size:</strong> {{ item.product.size }}</p>
+                                                {% endif %}
                                                 <p><strong>Price:</strong> Rs.{{ item.product.price }}</p>
                                                 <p><strong>Quantity:</strong> {{ item.quantity }}</p>
                                             </div>
@@ -155,6 +157,7 @@
                         {% if order.cancel %}
                             <p>cancelled</p>
                         {% elif order.status == 'Delivered' %}
+                        <p><strong>Product Delivered</strong></p>
                         <a class="btn btn-danger" href="{% url 'returnorder' order.id %}">Return Order</a>    
                         {% else %}
                             <a class="btn btn-danger" href="{% url 'cancelorder' order.id %}">Cancel Order</a>

@@ -15,11 +15,48 @@
 
 <body>
 <div class="center">
+   
+
+    <section class="order_details section_gap">
+        <div class="container">
+            <h3 class="title_confirmation">Thank you. Your order has been received.</h3>
+            
+            <div class="order_details_table">
+                <h2>Order Details</h2>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Product</th>
+                                <th scope="col">Quantity</th>
+                                <th scope="col">Price</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in order_items %}
+                                <tr>
+                                    <td>{{ item.product_name }}</td>
+                                    <td>{{ item.quantity }}</td>
+                                    <td>{{ item.product_price }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    <div class="order-summary">
+                        <!-- <p>Subtotal: Rs.{{ subtotal|floatformat:2 }}</p> -->
+                        <p>Shipping: Rs.50</p>
+                        <p>Total: Rs.{{ total|floatformat:2 }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <h3>
         Thanks, You are aweseome! <i class="fas fa-check-circle"></i>
     </h3>
     <h5>
-        <a href="http://127.0.0.1:8000/">
+        <a href="{% url 'home' %}">
             Again?
         </a>
     </h5>

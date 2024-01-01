@@ -109,16 +109,15 @@
             <li class="list-group-item">
                     <form action="{% url 'add_addresses' %}" method="post">
                     {% csrf_token %}
-                    <h6>Profile Settings</h6>
-                
+                    <h6>Profile Settings</h6>                
                     
                     <div class="form-group">
                         <label for="address">Address</label>
-                        <input type="text" id="address" name="address" pattern="^[^\s].*$" class="form-control" placeholder="Your address">
+                        <input type="text" id="address" name="address" pattern="^[^\s].*$" class="form-control" placeholder="Your address" required>
                     </div>
                     <div class="form-group">
                         <label for="city">City/Town</label>
-                        <input type="text" id="city" name="city"  pattern="^[^\s].*$" class="form-control" placeholder="City or Town">
+                        <input type="text" id="city" name="city"  pattern="^[^\s].*$" class="form-control" placeholder="City or Town" required>
                     </div>
                     <div class="form-group">
                         <label for="postalCode">Postal Code</label>

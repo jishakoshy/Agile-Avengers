@@ -3,8 +3,9 @@ from django.urls import path
 from . import views
 from django.conf.urls.static import static
 from django.conf import settings
-from django.contrib.auth import  views as auth_views
-from django.contrib.auth.views import LogoutView
+# from django.contrib.auth import  views as auth_views
+
+from django.contrib.auth.views import LogoutView, PasswordResetView, PasswordResetDoneView, PasswordResetConfirmView, PasswordResetCompleteView
 
 urlpatterns = [
     # USER SIDE------------------------------
@@ -17,13 +18,11 @@ urlpatterns = [
     # path('verify_otp/', views.verify_otp, name='verify_otp'),
 
         #forgot password
-    # path('activate/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z](1,13)-[0-9A-Za-z](1,20))/',views.activate ),
-    path('reset_password/', auth_views.PasswordResetView.as_view(),name='reset_password'),
-    path('reset_password_sent/', auth_views.PasswordResetDoneView.as_view(),name='password_reset_done'),
-    path('reset/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(),name='password_reset_confirm'),
-    path('reset_password_complete/', auth_views.PasswordResetCompleteView.as_view(),name='password_reset_complete'), 
 
-
+    path('reset_password' , PasswordResetView.as_view(template_name="userside/password_reset.html"), name= 'reset_password'),
+    path('reset_password_sent' , PasswordResetDoneView.as_view(template_name="userside/password_done.html"), name= 'password_reset_done'),
+    path('reset/<uidb64>/<token>/' , PasswordResetConfirmView.as_view(template_name="userside/password_confirm.html"), name= 'password_reset_confirm'),
+    path('reset_password_complete' , PasswordResetCompleteView.as_view(template_name="userside/password_complete.html"), name= 'password_reset_complete'),
 
 
     path('product_detail/<int:product_id>/',views.Product_detail, name = 'product_detail'),
@@ -43,7 +42,7 @@ urlpatterns = [
     path('filter_products_by_price/', views.filter_products_by_price, name='filter_products_by_price'),
 
     # payment razor----------------------------
-    path('payment_success', views.payment_success, name='payment_success'),
+    path('payment_success/', views.payment_success, name='payment_success'),
     path('createorder', views.createorder, name='createorder'),
 
 

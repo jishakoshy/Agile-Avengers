@@ -130,10 +130,8 @@
 							<img class="img-fluid" src="{{ product.image.url }}" alt="">
 						</div>
 						{% for j in subimg %}
-						<div class="single-prd-item">
-							
-							<img class="img-fluid" src="{{ j.image.url }}" alt="">
-							
+						<div class="single-prd-item">							
+							<img class="img-fluid" src="{{ j.image.url }}" alt="">							
 						</div>
 						{% endfor %}
 					</div>
@@ -147,20 +145,22 @@
 							<li><a href="#"><span>Availibility</span> : In Stock</a></li>
 						</ul>
 						<p>{{product.description}}</p>
-						<div class="product_size">
-							<h4>size : {{product.size}} inch</h4>
-						<form action="{% url 'product_detail' product.id %}" id="myform" method="POST">
-							{%csrf_token%}
 
-							<h5>Available Sizes:</h5>
-							<select name="size" id="" onchange="document.getElementById('myform').submit()">
-								{% for size in sizes %}
-									<option value="{{size}}">{{size}} inch</option>
-								{% endfor %}
-							</select>
-						</form>		
-							
-						</div>
+						{% if product.category.Name == "Shoes" %}
+							<div class="product_size">
+								<h4>size : {{product.size}} inch</h4>
+								<form action="{% url 'product_detail' product.id %}" id="myform" method="POST">
+									{%csrf_token%}
+									<h5>Available Sizes:</h5>
+									<select name="size" id="" onchange="document.getElementById('myform').submit()">
+										{% for size in sizes %}
+											<option value="{{size}}">{{size}} inch</option>
+										{% endfor %}
+									</select>
+								</form>																		
+							</div>
+						{% endif %}
+						
 						<div class="product_count">
 							<label for="qty">Quantity:</label>
 							<input type="text" name="qty" id="sst" maxlength="12" value="1" title="Quantity:" class="input-text qty">
@@ -197,10 +197,10 @@
 					<a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact"
 					 aria-selected="false">Comments</a>
 				</li>
-				<li class="nav-item">
+				<!-- <li class="nav-item">
 					<a class="nav-link active" id="review-tab" data-toggle="tab" href="#review" role="tab" aria-controls="review"
 					 aria-selected="false">Reviews</a>
-				</li>
+				</li> -->
 			</ul>
 			<div class="tab-content" id="myTabContent">
 				<div class="tab-pane fade" id="home" role="tabpanel" aria-labelledby="home-tab">
@@ -409,24 +409,7 @@
 										dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
 										commodo</p>
 								</div>
-								<div class="review_item">
-									<div class="media">
-										<div class="d-flex">
-											<img src="{% static 'img/product/review-2.png' %}" alt="">
-										</div>
-										<div class="media-body">
-											<h4>Blake Ruiz</h4>
-											<i class="fa fa-star"></i>
-											<i class="fa fa-star"></i>
-											<i class="fa fa-star"></i>
-											<i class="fa fa-star"></i>
-											<i class="fa fa-star"></i>
-										</div>
-									</div>
-									<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-										dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-										commodo</p>
-								</div>
+								
 								<div class="review_item">
 									<div class="media">
 										<div class="d-flex">
@@ -447,45 +430,7 @@
 								</div>
 							</div>
 						</div>
-						<div class="col-lg-6">
-							<div class="review_box">
-								<h4>Add a Review</h4>
-								<p>Your Rating:</p>
-								<ul class="list">
-									<li><a href="#"><i class="fa fa-star"></i></a></li>
-									<li><a href="#"><i class="fa fa-star"></i></a></li>
-									<li><a href="#"><i class="fa fa-star"></i></a></li>
-									<li><a href="#"><i class="fa fa-star"></i></a></li>
-									<li><a href="#"><i class="fa fa-star"></i></a></li>
-								</ul>
-								<p>Outstanding</p>
-								<form class="row contact_form" action="contact_process.php" method="post" id="contactForm" novalidate="novalidate">
-									<div class="col-md-12">
-										<div class="form-group">
-											<input type="text" class="form-control" id="name" name="name" placeholder="Your Full name" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Your Full name'">
-										</div>
-									</div>
-									<div class="col-md-12">
-										<div class="form-group">
-											<input type="email" class="form-control" id="email" name="email" placeholder="Email Address" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Email Address'">
-										</div>
-									</div>
-									<div class="col-md-12">
-										<div class="form-group">
-											<input type="text" class="form-control" id="number" name="number" placeholder="Phone Number" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Phone Number'">
-										</div>
-									</div>
-									<div class="col-md-12">
-										<div class="form-group">
-											<textarea class="form-control" name="message" id="message" rows="1" placeholder="Review" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Review'"></textarea></textarea>
-										</div>
-									</div>
-									<div class="col-md-12 text-right">
-										<button type="submit" value="submit" class="primary-btn">Submit Now</button>
-									</div>
-								</form>
-							</div>
-						</div>
+						
 					</div>
 				</div>
 			</div>

@@ -118,7 +118,7 @@ class Order(models.Model):
         ('Pending', 'Pending'),
         ('Shipping', 'Shipping'),
         ('Delivered', 'Delivered'),
-        ('Return', 'Return'),
+        # ('Return', 'Return'),
         ('Reject', 'Reject'),
     ]
 

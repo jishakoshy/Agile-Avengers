@@ -172,7 +172,9 @@
                                                 <img src="{{ item.product.image.url }}" alt="{{ item.product.Name }}" class="product-image mr-3" style="width: 6rem;" height="84rem">
                                                 <div class="product-info">
                                                     <p class="mb-1"><strong>Product:</strong> {{ item.product.Name }}</p>
-                                                    <p class="mb-1"><strong>Size:</strong> {{ item.product.size }}</p>
+                                                    {% if item.product.category.Name == "Shoes" %}
+                                                        <p class="mb-1"><strong>Size:</strong> {{ item.product.size }}</p>
+                                                    {% endif %}
                                                     <p class="mb-1"><strong>Price:</strong> Rs.{{ item.product.price }}</p>
                                                     <p class="mb-1"><strong>Quantity:</strong> {{ item.quantity }}</p>
                                                 </div>

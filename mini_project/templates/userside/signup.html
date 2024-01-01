@@ -28,9 +28,19 @@
         <div class="row d-flex justify-content-center">
           <div class="col-lg-8">
             <h2 class="fw-bold mb-5">Sign up now</h2>
+            
+            {% if messages %}
+            <div class="messages">
+              {% for message in messages %}
+                <div class="{% if message.tags %}alert alert-{{ message.tags }}{% endif %} {% if message.tags == 'error' %}text-danger{% endif %}">
+                  {{ message }}
+                </div>
+              {% endfor %}
+            </div>
+            {% endif %}
+
             <form method="POST" action="{% url 'sign_up' %}"> 
                 {% csrf_token %}
-              <!-- 2 column grid layout with text inputs for the first and last names -->
               <div class="row">
                 <div class="col-md-6 mb-4">
                   <div class="form-outline">
@@ -47,18 +57,12 @@
                 </div>
               </div>
   
-              <!-- Email input -->
+             
               <div class="form-outline mb-4">
                 <input type="email" id="form3Example3" class="form-control" name="email" pattern="[a-z0-9._%+-]+@gmail\.com" title="Please enter a valid Gmail address (e.g., example@gmail.com)" required />
 
                 <label class="form-label" for="form3Example3">Email address</label>
-                <!-- {% for message in messages %}
-                  {% if message.tags == 'error' %}
-                    <div class="alert alert-danger" role="alert">
-                      {{ message }}
-                    </div>
-                  {% endif %}
-                {% endfor %} -->
+                
               </div>
               
               <!-- Password input -->
@@ -70,13 +74,7 @@
               <div class="form-outline mb-4">
                 <input type="password" id="cpassword" class="form-control" name="cpassword"/>
                 <label class="form-label" for="form3Example4">Confirm Password</label>
-                <!-- {% if messages %}
-                <div class="alert alert-danger" role="alert">
-                    {% for message in messages %}
-                        {{ message }}
-                    {% endfor %}
-                </div>
-                {% endif %} -->
+                
               </div>
               
               <div class="form-group">

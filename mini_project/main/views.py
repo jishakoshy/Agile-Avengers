@@ -27,32 +27,6 @@ import razorpay,json
 from django.views.decorators.csrf import csrf_exempt
 from django.conf import settings
 
-from django.contrib.sites.shortcuts import get_current_site  
-from django.utils.encoding import force_bytes
-from django.utils.encoding import force_str
-from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode  
-from django.template.loader import render_to_string  
-# from .tokens import account_activation_token  
-from django.contrib.auth.models import User  
-from django.core.mail import EmailMessage  
-from django.contrib.auth import get_user_model
-from django.http import HttpResponse
-
-
-
-# def activate(request, uidb64, token):  
-#     User = get_user_model()  
-#     try:  
-#         uid = force_str(urlsafe_base64_decode(uidb64))  
-#         user = User.objects.get(pk=uid)  
-#     except(TypeError, ValueError, OverflowError, User.DoesNotExist):  
-#         user = None  
-#     if user is not None and account_activation_token.check_token(user, token):  
-#         user.is_active = True  
-#         user.save()  
-#         return HttpResponse('Thank you for your email confirmation. Now you can login your account.')  
-#     else:  
-#         return HttpResponse('Activation link is invalid!') 
 
 
 
@@ -147,6 +121,10 @@ def Sign_up(request):
             messages.error(request, 'This email is already registered.')
             return redirect('sign_up')
 
+        if not re.match(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$', password):
+            messages.error(request, 'Password must contain at least one uppercase letter, one lowercase letter, one digit, and one special character.')
+            return redirect('sign_up')
+        
         if password != cpassword:
             messages.error(request, 'Passwords do not match.')
             return redirect('sign_up')
@@ -192,8 +170,7 @@ def Sign_up(request):
 #     return render(request, 'userside/login.html')
 
 
-def Home(request):
-    
+def Home(request):   
     product = Product.objects.filter(deleted=False, is_varient = False)
     return render(request,'userside/home.html', {'products':product})
 
@@ -219,7 +196,7 @@ def Product_detail(request,product_id):
     sizes = []
     for item in variants:
         sizes.append(item.size)
-    print("Available sizes are ",sizes)
+    
     if request.method == 'POST':
         size = request.POST['size']
         product = Product.objects.filter(Name = product.Name , size = size).first()
@@ -232,22 +209,48 @@ def search_products(request):
     return render(request, 'userside/category.html', context)
 
 # filter by category 
+# def category_filter(request, category_id):
+#     category = Category.objects.get(pk=category_id)
+#     products = Product.objects.filter(category=category, status=True, deleted=False)
+#     return render(request, 'userside/shop.html', {'products': products})
+
+# # filter by min and max price
+# def filter_products_by_price(request):
+#     min_price = request.GET.get('min_price')
+#     max_price = request.GET.get('max_price')
+
+#     if min_price and max_price:
+#         products = Product.objects.filter(price__gte=min_price, price__lte=max_price)
+#     else:
+#         products = Product.objects.all()
+#     return render(request, 'userside/shop.html', {'products': products})
+
+
 def category_filter(request, category_id):
     category = Category.objects.get(pk=category_id)
     products = Product.objects.filter(category=category, status=True, deleted=False)
-    return render(request, 'userside/shop.html', {'products': products})
+    min_price = request.GET.get('min_price')
+    max_price = request.GET.get('max_price')
+    if min_price and max_price:
+        products = products.filter(price__gte=min_price, price__lte=max_price)
+    return render(request, 'userside/shop.html', {'products': products, 'selected_category': category})
 
-# filter by min and max price
+
 def filter_products_by_price(request):
     min_price = request.GET.get('min_price')
     max_price = request.GET.get('max_price')
-
-    if min_price and max_price:
-        products = Product.objects.filter(price__gte=min_price, price__lte=max_price)
+    category_id = request.GET.get('category_id')
+   
+    if category_id:
+        category = get_object_or_404(Category, pk=category_id)
+        products = Product.objects.filter(category=category, status=True, deleted=False)
     else:
         products = Product.objects.all()
-    return render(request, 'userside/shop.html', {'products': products})
-
+    if min_price and max_price:
+        products = products.filter(price__gte=min_price, price__lte=max_price)
+        return render(request, 'userside/shop.html', {'products': products})
+    return render(request, 'userside/shop.html', {'products': products, 'selected_category': category})
+   
 
 # add to cart
 # @login_required
@@ -273,7 +276,7 @@ def wishlist_view(request):
     if request.user.is_authenticated:       
         wishlist_items = Wishlist.objects.filter(user=request.user)
     else:
-        wishlist_items = []  
+        wishlist_items = []
 
     context = {
         'wishlist_items': wishlist_items,
@@ -330,9 +333,56 @@ def update_quantity(request, product_id,quantity):
 
 
 # ------------------------quantity updation on admin happening here-----------
-# checkout
-from django.db import transaction
 
+# from django.db import transaction
+# @login_required
+# def checkout_view(request):
+#     cart_items = Cart.objects.filter(user=request.user)
+#     address = Address.objects.filter(customer=request.user).first()
+#     subtotal = sum(item.product.price * item.quantity for item in cart_items)
+#     shipping = Decimal('50.00')
+#     total = subtotal + shipping
+
+#     if request.method == "POST":
+#         payment = request.POST['payment_method']
+#         if payment == 'cod':
+#             order = Order.objects.create(customer=request.user, total_amount=total, payment_option=payment)
+#             order_items = []
+#             for cart_item in cart_items:
+                
+#                 OrderItem.objects.create(order=order, product=cart_item.product, quantity=cart_item.quantity,
+#                                         product_price=cart_item.product.price)
+#                 product = Product.objects.get(id=cart_item.product.id)
+#                 product.quantity -= cart_item.quantity
+#                 product.save()
+#                 order_items.append({
+#                     'product_name': cart_item.product.Name,
+#                     'quantity': cart_item.quantity,
+#                     'product_price': cart_item.product.price,
+#                     'total_price': cart_item.product.price * cart_item.quantity,
+#                 })
+#             cart_items.delete()
+#             context = {
+#                 'order_items': order_items,
+#                 'subtotal': subtotal,
+#                 'shipping': shipping,
+#                 'total': total,
+#             }
+#             return render(request, 'userside/payment_success.html', context)
+#         else:
+#             return redirect('payment')
+#     context = {
+#         'items': cart_items,
+#         'address': address,
+#         'subtotal': subtotal,
+#         'shipping': shipping,
+#         'total': total,
+#     }
+#     return render(request, 'userside/checkout.html', context)
+
+
+from django.db.models import F
+from django.db import transaction
 @login_required
 def checkout_view(request):
     cart_items = Cart.objects.filter(user=request.user)
@@ -340,31 +390,42 @@ def checkout_view(request):
     subtotal = sum(item.product.price * item.quantity for item in cart_items)
     shipping = Decimal('50.00')
     total = subtotal + shipping
+
     if request.method == "POST":
-        payment = request.POST['payment_method']
+        payment = request.POST.get('payment_method')
         if payment == 'cod':
-            order = Order.objects.create(customer=request.user, total_amount=total, payment_option=payment)
-
             order_items = []
+
             for cart_item in cart_items:
-                OrderItem.objects.create(order=order, product=cart_item.product, quantity=cart_item.quantity,
-                                        product_price=cart_item.product.price)
-                product = Product.objects.get(id=cart_item.product.id)
-                product.quantity -= cart_item.quantity
-                product.save()
+                if cart_item.product.quantity < cart_item.quantity:
+                    messages.error(request, f"Sorry, Product  out of stock.")
+                    return redirect('cart')
 
-                order_items.append({
-                    'product_name': cart_item.product.Name,  
-                    'quantity': cart_item.quantity,            
-                })
-
+            with transaction.atomic():
+                order = Order.objects.create(customer=request.user, total_amount=total, payment_option=payment)
+                for cart_item in cart_items:
+                    OrderItem.objects.create(order=order, product=cart_item.product, quantity=cart_item.quantity,
+                                            product_price=cart_item.product.price)
+                    Product.objects.filter(id=cart_item.product.id).update(quantity=F('quantity') - cart_item.quantity)
+                    order_items.append({
+                        'product_name': cart_item.product.Name,
+                        'quantity': cart_item.quantity,
+                        'product_price': cart_item.product.price,
+                        'total_price': cart_item.product.price * cart_item.quantity,
+                    })
             cart_items.delete()
-            return redirect('payment_success')
+            context = {
+                'order_items': order_items,
+                'subtotal': subtotal,
+                'shipping': shipping,
+                'total': total,
+            }
+            return render(request, 'userside/payment_success.html', context)
         else:
             return redirect('payment')
-            
+
     context = {
-        'items':cart_items,
+        'items': cart_items,
         'address': address,
         'subtotal': subtotal,
         'shipping': shipping,
@@ -373,42 +434,71 @@ def checkout_view(request):
     return render(request, 'userside/checkout.html', context)
 
 
+# razorpay view
+# def payment(request):
+#     cart_items = Cart.objects.filter(user=request.user)
+#     subtotal = sum(item.product.price * item.quantity for item in cart_items)
+#     shipping = Decimal('50.00')
+#     total = subtotal + shipping
+    
+#     client = razorpay.Client(auth=(settings.RAZORPAY_API_KEY, settings.RAZORPAY_API_SECRET_KEY))
+#     razorpay_order = client.order.create({
+#         'amount': int(total * 100),
+#         'currency': 'INR',
+#         'payment_capture': 1
+#     })  
+#     print(f"Subtotal: {subtotal}")
+#     print(f"Total: {total}")     
+#     context = {
+#         'subtotal': subtotal,
+#         'shipping': shipping,
+#         'total': total,
+#         'razorpay_order_id': razorpay_order['id'],
+#         'razorpay_key': settings.RAZORPAY_API_KEY,
+#     }  
+#     return render(request, 'userside/payment.html', context)
+
+
+from django.contrib import messages
 def payment(request):
     cart_items = Cart.objects.filter(user=request.user)
     subtotal = sum(item.product.price * item.quantity for item in cart_items)
     shipping = Decimal('50.00')
     total = subtotal + shipping
     
-    
-    # razorpay
+    for cart_item in cart_items:
+        if cart_item.product.quantity < cart_item.quantity:
+            messages.error(request, f"Sorry, '{cart_item.product.Name}' is out of stock.")
+            return redirect('cart')
+
     client = razorpay.Client(auth=(settings.RAZORPAY_API_KEY, settings.RAZORPAY_API_SECRET_KEY))
     razorpay_order = client.order.create({
         'amount': int(total * 100),
         'currency': 'INR',
         'payment_capture': 1
-    })
-        
+    })  
+    print(f"Subtotal: {subtotal}")
+    print(f"Total: {total}")     
     context = {
         'subtotal': subtotal,
         'shipping': shipping,
         'total': total,
         'razorpay_order_id': razorpay_order['id'],
         'razorpay_key': settings.RAZORPAY_API_KEY,
-    }
+    }  
     return render(request, 'userside/payment.html', context)
 
 
-@transaction.atomic
 @csrf_exempt
 def createorder(request):
     cart_items = Cart.objects.filter(user=request.user)
     subtotal = sum(item.product.price * item.quantity for item in cart_items)
     shipping = Decimal('50.00')
     total = subtotal + shipping
-    
+
     order = Order.objects.create(customer=request.user, total_amount=total, payment_option='upi')
 
-    order_items = [] 
+    order_items = []
     for cart_item in cart_items:
         OrderItem.objects.create(order=order, product=cart_item.product, quantity=cart_item.quantity,
                                     product_price=cart_item.product.price)
@@ -417,20 +507,37 @@ def createorder(request):
         product.save()
 
         order_items.append({
-            'product_name': cart_item.product.Name,  
-            'quantity': cart_item.quantity,            
+            'product_name': cart_item.product.Name,
+            'quantity': cart_item.quantity,
+            'product_price': cart_item.product.price,    
+            # 'subtotal':cart_item.total_amount - shipping,       
         })
 
-    cart_items.delete()
-    return redirect('payment_success')
-
-
-
+    cart_items.delete()  
+    context = {
+        'order_items': order_items,
+        'total': total,
+    }
+    return render(request, 'userside/payment_success.html', context)
 
 @csrf_exempt
-def payment_success(request):
-    return render(request, "userside/payment_success.html")
+def payment_success(request):  
+   return render(request, "userside/payment_success.html")
 
+
+
+# def payment_success(request):
+#     order_items = request.context.get('order_items', [])
+#     subtotal = request.context.get('subtotal', Decimal('0.00'))
+#     shipping = request.context.get('shipping', Decimal('0.00'))
+#     total = request.context.get('total', Decimal('0.00'))
+#     context = {
+#         'order_items': order_items,
+#         'subtotal': subtotal,
+#         'shipping': shipping,
+#         'total': total,
+#     }
+#     return render(request, 'userside/payment_success.html', context)
 
 
 @login_required
@@ -445,7 +552,6 @@ def orderaddress(request):
         selected_address_id = request.POST.get('selected_address')
         if selected_address_id:
             selected_address = Address.objects.get(id=selected_address_id)
-
             request.user.selected_address = selected_address 
             request.user.save()
       
@@ -464,7 +570,6 @@ def orderaddress(request):
     return render(request, 'userside/orderaddress.html', context)
 
 
-
 def order_add_addre(request):
     user = request.user
     cus = Customer.objects.get(email = user)
@@ -473,15 +578,12 @@ def order_add_addre(request):
         city = request.POST.get('city')
         post = request.POST.get('PostalCode')
         if len(post) != 6 or len(set(post))== 1:
-
             messages.error(request, "Invalid zip code. Please enter a proper value.")
             return render(request, 'userside/ord_add_address.html')
         sav = Address.objects.create(customer=cus, address=address, city=city, postalcode=post )
         sav.save()
         return redirect('orderaddress') 
     return render(request,'userside/ord_add_address.html')
-
-
 
 
 
@@ -534,10 +636,8 @@ def cancelorder(request, order_id):
             transaction_balance=order.customer.wallet.balance + refund_amount,
             related_order=order,
         )
-
         order.customer.wallet.balance += refund_amount
         order.customer.wallet.save()
-
     return redirect("userprofile")
 
 
@@ -559,7 +659,6 @@ def return_order(request, order_id):
         )
         request.user.wallet.balance += refund_amount
         request.user.wallet.save()
-
     return redirect('userprofile')
 
 
@@ -604,23 +703,26 @@ def remove_address(request, address_id):
     messages.success(request, 'Address removed successfully.')
     return redirect('viewaddress')
 
+
 def add_addresses(request):
     user = request.user
     cus = Customer.objects.get(email = user)
-    if request.method == 'POST':
-        
+    if request.method == 'POST':        
         address = request.POST.get('address')
         city = request.POST.get('city')
-        post = request.POST.get('postalCode')
-
+        post = request.POST.get('editPostalCode')
+        if len(post) != 6 or len(set(post))== 1:
+            messages.error(request, "Invalid zip code. Please enter a proper value.")
+            return render(request, 'userside/2userprofile.html')
         sav = Address.objects.create(customer=cus, address=address, city=city, postalcode=post)
         sav.save()
         return redirect('userprofile') 
     return render(request,'userside/2userprofile.html')
+
+
 # editing address
 # def edit_address(request, address_id):
 #     address = get_object_or_404(Address, id=address_id)
-
 #     if request.method == 'POST':
 #         new_address = request.POST.get('editAddress')
 #         new_city = request.POST.get('editCity')
@@ -651,7 +753,7 @@ def edit_address(request, address_id):
             if len(new_postalcode) != 6 or len(set(new_postalcode)) == 1:
                 messages.error(request, "Invalid zip code. Please enter a proper value.")
                 return render(request, 'userside/userEditaddress.html', {'address': address})
-            
+           
             # Update the address fields and save
             address.address = new_address
             address.city = new_city
@@ -661,8 +763,6 @@ def edit_address(request, address_id):
             return redirect('viewaddress')
 
     return render(request, 'userside/userEditaddress.html', {'address': address})
-
-
 
 
 

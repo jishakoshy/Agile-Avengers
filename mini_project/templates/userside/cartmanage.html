@@ -111,6 +111,15 @@
     <!-- End Banner Area -->
 
     <!--================Cart Area =================-->
+	{% if messages %}
+		<div class="messages">
+			{% for message in messages %}
+			<div class="{% if message.tags %}alert alert-{{ message.tags }}{% endif %} {% if message.tags == 'error' %}text-danger{% endif %}">
+				{{ message }}
+			</div>
+			{% endfor %}
+		</div>
+	{% endif %}
     <section class="cart_area">
         <div class="container">
             <div class="cart_inner">

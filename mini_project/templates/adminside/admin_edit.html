@@ -49,8 +49,17 @@
         <div class="form-group">
             <label for="productQuantity">Product Quantity</label>
             <input type="text" name="quantity" class="form-control" value="{{editpro.quantity}}" id="productQuantity" placeholder="Enter product quantity">
-
         </div>
+
+        <div class="form-group">
+            <label for="productSize">Size</label>
+            {% if editpro.category.Name == 'Shoes' %}
+            <input name="size" type="text" class="form-control" value="{{ editpro.size }}" id="productSize" placeholder="Enter product size">
+            {% else %}
+            <input name="size" type="text" class="form-control" value="None" id="productSize" readonly>
+            {% endif %}
+        </div>
+
         <div class="form-group">
             <label for="productPrice">Price</label>
             <input name="price" type="number" class="form-control" value="{{editpro.price}}" id="productPrice" placeholder="Enter product price">
