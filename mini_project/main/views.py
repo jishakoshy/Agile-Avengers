@@ -697,7 +697,7 @@ def user_edit(request):
     context = {
         'user': user,
     }
-    return render(request, 'userside/USER-PROF-EDIT.html', context)
+    return render(request, 'userside/USER-PROF-EDIT.HTML', context)
 
 
 def remove_address(request, address_id):
