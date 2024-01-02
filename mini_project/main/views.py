@@ -270,6 +270,9 @@ def add_to_cart(request, product_id):
 
     return redirect('home')  
 
+
+
+
 @login_required
 # wishlist
 def wishlist_view(request):
