@@ -319,19 +319,19 @@ def remove_from_cart(request, product_id):
     cart_item.delete()
     return redirect('cart')
 
-def update_quantity(request, product_id,quantity):
-    
-    print(product_id,quantity)
+def update_quantity(request, product_id, quantity):     
     product = Product.objects.get(id=product_id)
-
-    print(product.quantity)
     cart = Cart.objects.get(user=request.user, product=product)
    
     cart.quantity = quantity
     if quantity > product.quantity:
         messages.warning(request,"limit exceeded")
     cart.save()
-    return JsonResponse({'success': True, 'quantity':product.quantity})
+    cart_items = Cart.objects.filter(user=request.user)
+    subtotal = sum(item.product.price * item.quantity for item in cart_items)
+
+    return JsonResponse({'success': True, 'quantity': product.quantity, 'subtotal': subtotal})
+  
 
 
 

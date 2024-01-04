@@ -39,8 +39,11 @@
 
 	<!-- Start Header Area -->
 	<header class="header_area sticky-header">
+		<br>
+		
 		<div class="main_menu">
 			<nav class="navbar navbar-expand-lg navbar-light main_box">
+				
 				<div class="container">
 					<!-- Brand and toggle get grouped for better mobile display -->
 					<a class="navbar-brand logo_h" href="{% url 'home' %}"><img
@@ -87,7 +90,7 @@
 				</div>
 			</nav>
 		</div>
-		<div class="search_input" id="search_input_box">
+		<!-- <div class="search_input" id="search_input_box">
 			<div class="container">
 				<form class="d-flex justify-content-between" method="get" action="{% url 'search_products' %}">
 					<input type="text" name="q" class="form-control" id="search_input" placeholder="Search Here">
@@ -95,7 +98,8 @@
 					<span class="lnr lnr-cross" id="close_search" title="Close Search"></span>
 				</form>
 			</div>
-		</div>
+		</div> -->
+		
 	</header>
     
     <section class="banner-area organic-breadcrumb">
@@ -167,26 +171,7 @@
 									<a href="{% url 'remove_from_cart' item.product.id %}" onclick="removeProduct(this);">Remove</a>
 								</td>
 							</tr>
-							{% endfor %}
-                            
-                            <!-- <tr class="bottom_button">
-                                <td>
-                                    <a class="gray_btn" href="#">Update Cart</a>
-                                </td>
-                                <td>
-
-                                </td>
-                                <td>
-
-                                </td>
-                                <td>
-                                    <div class="cupon_text d-flex align-items-center">
-                                        <input type="text" placeholder="Coupon Code">
-                                        <a class="primary-btn" href="#">Apply</a>
-                                        <a class="gray_btn" href="#">Close Coupon</a> 
-                                    </div>
-                                </td>
-                            </tr> -->
+							{% endfor %}                           
                             <tr>
                                 <td>
 
@@ -194,11 +179,10 @@
                                 <td>
 
                                 </td>
-                                <!-- <td>
-                                    <h5>Subtotal</h5>
-                                </td> -->
+                               
                                 <td>
-                                    <h5>Subtotal:   Rs.{{ subtotal }}</h5>
+                                    <h5 id="subtotal">Subtotal: Rs.{{ subtotal }}</h5>
+
                                 </td>
                             </tr>
                             
@@ -294,7 +278,59 @@
 	<script src="{% static 'js/gmaps.min.js' %}"></script>
 	<script src="{% static 'js/main.js' %}"></script>
 
-    <script>
+
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+<script>
+    function updateQuantity(elem, id) {
+        let parent = elem.parentElement;
+        let limitMessage = parent.querySelector('.limitMessage');
+        let quantity = Number(elem.value);
+
+        $.ajax({
+            url: `/update_quantity/${id}/${quantity}`,
+            method: 'GET',
+            dataType: 'json',
+            success: function (res) {
+                if (res.success) {
+                    if (quantity === res.quantity) {
+                        limitMessage.classList.remove('invisible');
+                    } else {
+                        limitMessage.classList.add('invisible');
+                    }
+
+                    // Update the subtotal in the HTML
+                    updateSubtotal(res.subtotal);
+
+                    // Add code to close the search input
+                    closeSearchInput();
+                } else {
+                    console.log('Some error occurred');
+                }
+            },
+            error: function (err) {
+                console.log('Error:', err);
+            }
+        });
+    }
+
+    function updateSubtotal(subtotal) {
+        // Update the HTML element that displays the subtotal
+        document.getElementById('subtotal').innerHTML = `Subtotal: Rs.${subtotal}`;
+    }
+</script>
+
+
+    
+</body>
+
+</html>
+
+
+<!-- update quantity -->
+
+<!-- <script>
         function removeProduct(button) {
             var row = button.closest("tr");
             row.remove(); 
@@ -323,8 +359,4 @@
 				console.log('b4 error')
 				console.log(err)})
 		}
-    </script>
-
-</body>
-
-</html>
+    </script> -->
