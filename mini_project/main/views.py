@@ -259,18 +259,20 @@ def filter_products_by_price(request):
 #     product = Product.objects.get(id=product_id)
 #     cart_item, created = Cart.objects.get_or_create(user=user, product=product)
 #     items = Cart.objects.filter(user=user)
-#     return render(request, 'userside/cartmanage.html', {'items': items})
+#     return redirect('home')  
 
 @login_required
 def add_to_cart(request, product_id):
     user = request.user
     product = Product.objects.get(id=product_id)
+
     cart_item, created = Cart.objects.get_or_create(user=user, product=product)
-    items = Cart.objects.filter(user=user)
 
-    return redirect('home')  
+    if not created:
+        cart_item.quantity += 1
+        cart_item.save()
 
-
+    return redirect('home')
 
 
 @login_required

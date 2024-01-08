@@ -78,8 +78,7 @@ def Add_category(request, category_id=None):
     if request.method == 'POST':
         name = request.POST.get('name')
         description = request.POST.get('discription')
-        status = request.POST.get('status') == 'on'  # Assuming status is a checkbox in the form
-
+        status = request.POST.get('status') == 'on'  
         existing_category = Category.objects.filter(Name=name)
         if existing_category.exists():
             error_message = "Category with this name already exists."

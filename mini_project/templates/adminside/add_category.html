@@ -1,217 +1,214 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Category - Admin Dashboard</title>
-    <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="{% static 'assets/vendors/mdi/css/materialdesignicons.min.css' %}">
-    <link rel="stylesheet" href="{% static 'assets/vendors/css/vendor.bundle.base.css' %}">
-    
-    <link rel="stylesheet" href="{% static 'assets/css/style.css' %}">
-    <!-- End layout styles -->
-    <link rel="shortcut icon" href="assets/images/favicon.ico" />
-    
-    <style>
-        /* Basic styling for the content area */
-        .content {
-            padding: 20px;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Add Category - Admin Dashboard</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="{% static 'assets/vendors/mdi/css/materialdesignicons.min.css' %}">
+  <link rel="stylesheet" href="{% static 'assets/vendors/css/vendor.bundle.base.css' %}">
 
-        /* Styling for form elements */
-        .form-group {
-            margin-bottom: 20px;
-        }
+  <link rel="stylesheet" href="{% static 'assets/css/style.css' %}">
+  <!-- End layout styles -->
+  <link rel="shortcut icon" href="assets/images/favicon.ico" />
 
-        label {
-            display: block;
-            font-weight: bold;
-        }
+  <style>
+    /* Basic styling for the content area */
+    .content {
 
-        input[type="text"],
-        textarea {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
 
-        /* Styling for the "Add Category" button */
-        .add-category-button {
-            background-color: #007bff;
-            color: #fff;
-            border: none;
-            padding: 10px 20px;
-            cursor: pointer;
-            border-radius: 5px;
-        }
+      padding: 20px;
+    }
 
-        .add-category-button:hover {
-            background-color: #0056b3;
-        }
+    /* Styling for form elements */
+    .form-group {
+      margin-bottom: 20px;
+    }
 
-        /* Add more specific styling as needed */
-    </style>
-    
+    label {
+      display: block;
+      font-weight: bold;
+    }
+
+    input[type="text"],
+    textarea {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    /* Styling for the "Add Category" button */
+    .add-category-button {
+      background-color: #007bff;
+      color: #f7f4f8e3;
+      border: none;
+      padding: 10px 20px;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+
+    .add-category-button:hover {
+      background-color: #0056b3;
+    }
+  </style>
+
 
 </head>
+
 <body>
-    <nav class="navbar default-layout-navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
-        
-        <div class="navbar-menu-wrapper d-flex align-items-stretch">
-          <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
-            <span class="mdi mdi-menu"></span>
-          </button>
-          
-          <!-- <ul class="navbar-nav navbar-nav-right">
-            <li class="nav-item nav-profile dropdown"> -->
-              
-        </ul> 
-        </div>
-      </nav>
-      <!-- partial -->
-      <div class="container-fluid page-body-wrapper">
-        <!-- partial:partials/_sidebar.html -->
-        <nav class="sidebar sidebar-offcanvas" id="sidebar">
-          <ul class="nav">
-            <li class="nav-item nav-profile">
-              <a href="#" class="nav-link">
-                <!-- <div class="nav-profile-image">
-                  <img src="{% static 'assets/images/faces/face1.jpg' %}" alt="profile">
-                  <span class="login-status online"></span>
-                  
-                </div> -->
-                <div class="nav-profile-text d-flex flex-column">
-                  <span class="font-weight-bold mb-2">Jisha k. </span>
-                  <span class="text-secondary text-small">Project Manager</span>
-                </div>
-                <i class="mdi mdi-bookmark-check text-success nav-profile-badge"></i>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="index.html">
-                
-                <span class="menu-title">Dashboard</span>
-                <i class="mdi mdi-home menu-icon"></i>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="pages/forms/basic_elements.html"></a>
-                <a class="nav-link" href="{% url 'sales_report' %}">
-                <span class="menu-title"> Sales Report </span>
-                <i class="mdi mdi-format-list-bulleted menu-icon"></i>
-              </a>
-            </li>
-           
-            <li class="nav-item">
-              <a class="nav-link" href="pages/icons/mdi.html">
-                <a class="nav-link" href="{% url 'user_management' %}">
-                <span class="menu-title">User Management</span>
-                <i class="mdi mdi-contacts menu-icon"></i>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="pages/forms/basic_elements.html"></a>
-                <a class="nav-link" href="{% url 'add_category' %}">
-                <span class="menu-title"> Category Management</span>
-                <i class="mdi mdi-format-list-bulleted menu-icon"></i>
-              </a>
-            </li>
-            
-            <li class="nav-item">
-              <a class="nav-link" href="pages/tables/basic-table.html"></a>
-                <a class="nav-link" href="{% url 'productview' %}">
-                <span class="menu-title">Product Management</span>
-                <i class="mdi mdi-table-large menu-icon"></i>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="pages/tables/basic-table.html"></a>
-                <a class="nav-link" href="{% url 'order_management' %}">
-                <span class="menu-title">Order Management</span>
-                <i class="mdi mdi-table-large menu-icon"></i>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="pages/tables/basic-table.html"></a>
-                <a class="nav-link" href="{% url 'stock_list' %}">
-                <span class="menu-title">Stock Management</span>
-                <i class="mdi mdi-table-large menu-icon"></i>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="pages/icons/mdi.html"></a>
-                <a class="nav-link" href="{% url 'log_out' %}">
-                <span class="menu-title">Log Out</span>
-                <i class="mdi mdi-power"></i>
-              </a>
-            </li>
-            
-          </ul>
-        </nav>
+  <nav class="navbar default-layout-navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
 
-<div class="content">
-    <h2>Add Category</h2>
-    {% for message in messages %} <p>{{ message }}</p> {% endfor %}
+    <div class="navbar-menu-wrapper d-flex align-items-stretch">
+      <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
+        <span class="mdi mdi-menu"></span>
+      </button>
 
-    <!-- Form for adding/editing categories -->
-    <form method="POST" action="{% url 'add_category' %}">
-        {% csrf_token %}
-        <div class="form-group">
+      </ul>
+    </div>
+  </nav>
+
+  <div class="container-fluid page-body-wrapper">
+
+    <nav class="sidebar sidebar-offcanvas" id="sidebar">
+      <ul class="nav">
+        <li class="nav-item nav-profile">
+          <a href="#" class="nav-link">
+
+            <div class="nav-profile-text d-flex flex-column">
+              <span class="font-weight-bold mb-2">Jisha k. </span>
+              <span class="text-secondary text-small">Project Manager</span>
+            </div>
+            <i class="mdi mdi-bookmark-check text-success nav-profile-badge"></i>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="index.html">
+
+            <span class="menu-title">Dashboard</span>
+            <i class="mdi mdi-home menu-icon"></i>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="pages/forms/basic_elements.html"></a>
+          <a class="nav-link" href="{% url 'sales_report' %}">
+            <span class="menu-title"> Sales Report </span>
+            <i class="mdi mdi-format-list-bulleted menu-icon"></i>
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link" href="pages/icons/mdi.html">
+            <a class="nav-link" href="{% url 'user_management' %}">
+              <span class="menu-title">User Management</span>
+              <i class="mdi mdi-contacts menu-icon"></i>
+            </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="pages/forms/basic_elements.html"></a>
+          <a class="nav-link" href="{% url 'add_category' %}">
+            <span class="menu-title"> Category Management</span>
+            <i class="mdi mdi-format-list-bulleted menu-icon"></i>
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link" href="pages/tables/basic-table.html"></a>
+          <a class="nav-link" href="{% url 'productview' %}">
+            <span class="menu-title">Product Management</span>
+            <i class="mdi mdi-table-large menu-icon"></i>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="pages/tables/basic-table.html"></a>
+          <a class="nav-link" href="{% url 'order_management' %}">
+            <span class="menu-title">Order Management</span>
+            <i class="mdi mdi-table-large menu-icon"></i>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="pages/tables/basic-table.html"></a>
+          <a class="nav-link" href="{% url 'stock_list' %}">
+            <span class="menu-title">Stock Management</span>
+            <i class="mdi mdi-table-large menu-icon"></i>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="pages/icons/mdi.html"></a>
+          <a class="nav-link" href="{% url 'log_out' %}">
+            <span class="menu-title">Log Out</span>
+            <i class="mdi mdi-power"></i>
+          </a>
+        </li>
+
+      </ul>
+    </nav>
+    <div class="container" style="width: 120vh;">
+      <div class="content" style="text-align: center;">
+        <h2>Add Category</h2>
+        {% for message in messages %} <p>{{ message }}</p> {% endfor %}
+
+        <!-- Form for adding/editing categories -->
+        <form method="POST" action="{% url 'add_category' %}">
+          {% csrf_token %}
+          <div class="form-group">
             <label for="name">Category Name:</label>
             <input type="text" id="name" name="name" step="0.01" required>
-        </div>
+          </div>
 
-        <div class="form-group">
+          <div class="form-group ">
             <label for="discription">Description:</label>
             <input type="text" id="discription" name="discription" step="0.01" required>
-        </div>
+          </div>
 
-        <!-- Hidden input for category ID when editing -->
-        <input type="hidden" id="category_id" name="category_id" value="{{ category.id }}">
+          <!-- Hidden input for category ID when editing -->
+          <input type="hidden" id="category_id" name="category_id" value="{{ category.id }}">
 
-        <div class="form-group">
+          <div class="form-group">
             <button type="submit" class="add-category-button">Add Category</button>
+          </div>
+        </form>
+        {% if error_message %}
+        <div class="alert alert-danger" role="alert">
+          {{ error_message }}
         </div>
-    </form>
-    {% if error_message %}
-    <div class="alert alert-danger" role="alert">
-        {{ error_message }}
-    </div>
-    {% endif %}
+        {% endif %}
 
-    {% for message in messages %}
-    <div class="alert alert-danger" role="alert">
-        {{ message }}
+        {% for message in messages %}
+        <div class="alert alert-danger" role="alert">
+          {{ message }}
+        </div>
+        {% endfor %}
     </div>
-    {% endfor %}
-
-    <!-- Table for listing categories -->
-    <h2>Categories</h2>
-    <table>
-      <thead>
-          <tr>
+        
+        <h2>Categories</h2>
+        <table>
+          <thead>
+            <tr>
               <th>ID</th>
               <th>Name</th>
               <th>Edit</th>
               <th>Delete</th>
-          </tr>
-      </thead>
-      <tbody>
-          {% for category in categories %}
-              <tr>
-                  <td>{{ category.id }}</td>
-                  <td>{{ category.Name }}</td>
-                  <td><a href="{% url 'edit_category' category.id %}">Edit</a></td>
-                  <td><a href="{% url 'delete_category' category.id %}">Delete</a></td>
-              </tr>
-          {% endfor %}
-      </tbody>
-  </table>
+            </tr>
+          </thead>
+          <tbody>
+            {% for category in categories %}
+            <tr>
+              <td>{{ category.id }}</td>
+              <td>{{ category.Name }}</td>
+              <td><a href="{% url 'edit_category' category.id %}">Edit</a></td>
+              <td><a href="{% url 'delete_category' category.id %}">Delete</a></td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+
+      </div>
     
-</div>
 
 
 </body>
+
 </html>

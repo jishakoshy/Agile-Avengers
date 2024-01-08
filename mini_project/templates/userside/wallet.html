@@ -1,95 +1,137 @@
 <!DOCTYPE html>
 {% load static %}
 <html lang="zxx" class="no-js">
+
 <head>
-    
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-   
-    <link rel="shortcut icon" href="{% static 'img/fav.png' %}">
-   
-    <meta name="author" content="CodePixar">
-  
-    <meta name="description" content="">
-   
-    <meta name="keywords" content="">
-  
-    <meta charset="UTF-8">
-   
-    <title>AGILE AVENGERS </title>
+	<!-- Mobile Specific Meta -->
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<!-- Favicon-->
+	<link rel="shortcut icon" href="{% static 'img/fav.png' %}">
+	<!-- Author Meta -->
+	<meta name="author" content="CodePixar">
+	<!-- Meta Description -->
+	<meta name="description" content="">
+	<!-- Meta Keyword -->
+	<meta name="keywords" content="">
+	<!-- meta character set -->
+	<meta charset="UTF-8">
+	<!-- Site Title -->
+	<title>AGILE AVENGERS </title>
+	<!--
+		CSS
+		============================================= -->
+	<link rel="stylesheet" href="{% static 'css/linearicons.css' %}">
+	<link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}">
+	<link rel="stylesheet" href="{% static 'css/themify-icons.css' %}">
+	<link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+	<link rel="stylesheet" href="{% static 'css/owl.carousel.css' %}">
+	<link rel="stylesheet" href="{% static 'css/nice-select.css' %}">
+	<link rel="stylesheet" href="{% static 'css/nouislider.min.css' %}">
+	<link rel="stylesheet" href="{% static 'css/ion.rangeSlider.css' %}" />
+	<link rel="stylesheet" href="{% static 'css/ion.rangeSlider.skinFlat.css' %}" />
+	<link rel="stylesheet" href="{% static 'css/magnific-popup.css' %}">
+	<link rel="stylesheet" href="{% static 'css/main.css' %}">
+	<!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous"> -->
 
+	<style>
+		.center-container {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			height: 110vh;
 
-    <link rel="stylesheet" href="{% static 'css/linearicons.css' %}">
-    <link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}">
-    <link rel="stylesheet" href="{% static 'css/themify-icons.css' %}">
-    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
-    <link rel="stylesheet" href="{% static 'css/owl.carousel.css' %}">
-    <link rel="stylesheet" href="{% static 'css/nice-select.css' %}">
-    <link rel="stylesheet" href="{% static 'css/nouislider.min.css' %}">
-    <link rel="stylesheet" href="{% static 'css/ion.rangeSlider.css' %}" />
-    <link rel="stylesheet" href="{% static 'css/ion.rangeSlider.skinFlat.css' %}" />
-    <link rel="stylesheet" href="{% static 'css/magnific-popup.css' %}">
-    <link rel="stylesheet" href="{% static 'css/main.css' %}">
-    
+			width: 200vh;
+
+		}
+
+		.col-lg-4 {}
+	</style>
 </head>
-    
+
 <body>
 
-        <header class="header_area sticky-header">
-            <div class="main_menu">
-                <nav class="navbar navbar-expand-lg navbar-light main_box">
-                    <div class="container">
-                        <a class="navbar-brand logo_h" href="{% url 'home' %}"><img
-                                src="{% static 'img/mini_project_logo.png' %}" style="height:5rem; width: 7rem; "
-                                alt=""></a>        
-                        <div class="collapse navbar-collapse offset" id="navbarSupportedContent">
-                            <ul class="nav navbar-nav menu_nav ml-auto">
-                                <li class="nav-item "><a class="nav-link" href="{% url 'home' %}">Home</a>
-                                </li>
-                                <li class="nav-item "><a class="nav-link" href="{% url 'Shop' %}">Shop</a>
-                                </li>
-                                <li class="nav-item"><a class="nav-link" href="{% url 'userprofile' %}">Profile</a></li>
-    
-                                {% if request.user.is_authenticated %}
-                                    <li class="nav-item submenu dropdown">
-                                        <a href="{% url 'logout' %}" class="nav-link dropdown-toggle">Logout</a>
-                                    </li>
-                                {% else %}
-                                    <li class="nav-item submenu dropdown">
-                                        <a href="{% url 'loginn' %}" class="nav-link dropdown-toggle">Login</a>
-                                    </li>
-                                {% endif %}
-    
-                            </ul>
-                            <ul class="nav navbar-nav navbar-right">
-                                <li class="nav-item"><a href="{% url 'cart' %}" class="cart"><span class="ti-bag"></span></a></li>
-                                <li class="nav-item"><a href="{% url 'wallet_view' %}" class="wallet"><span class="ti-wallet"></span></a></li>
-                            </ul>
-                            <ul class="nav navbar-nav navbar-right">
-                                <li class="nav-item"><a href="{% url 'wishlist' %}" class="wishlist"><span class="lnr lnr-heart"></span></a></li>
-                                <li class="nav-item">
-                                    <button class="search"><span class="lnr lnr-magnifier" id="search"></span></button>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </nav>
-            </div> 
-            
-        </header>
-    <section class="banner-area organic-breadcrumb">
-        <div class="container">
-            <div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
-                <div class="col-first">
-                    <h1>Wallet </h1>
-                </div>
-            </div>
-        </div>
-    </section>
+	<!-- Start Header Area -->
+	<header class="header_area sticky-header">
+		<div class="main_menu">
+            <br>
+            <br>
+           
+			<nav class="navbar navbar-expand-lg navbar-light main_box">
+				<div class="container">
+					<!-- Brand and toggle get grouped for better mobile display -->
+					<a class="navbar-brand logo_h" href="{% url 'home' %}"><img
+							src="{% static 'img/mini_project_logo.png' %}" style="height:5rem; width: 7rem; "
+							alt=""></a>
+					<!-- <button class="navbar-toggler" type="button" data-toggle="collapse"
+						data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+						aria-expanded="false" aria-label="Toggle navigation">
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</button> -->
+					<!-- Collect the nav links, forms, and other content for toggling -->
+					<div class="collapse navbar-collapse offset" id="navbarSupportedContent">
+						<ul class="nav navbar-nav menu_nav ml-auto">
+							<li class="nav-item "><a class="nav-link" href="{% url 'home' %}">Home</a>
+							</li>
+							<li class="nav-item "><a class="nav-link" href="{% url 'Shop' %}">Shop</a>
+							</li>
+							<li class="nav-item"><a class="nav-link" href="{% url 'userprofile' %}">Profile</a></li>
+
+							{% if request.user.is_authenticated %}
+								<li class="nav-item submenu dropdown">
+									<a href="{% url 'logout' %}" class="nav-link dropdown-toggle">Logout</a>
+								</li>
+							{% else %}
+								<li class="nav-item submenu dropdown">
+									<a href="{% url 'loginn' %}" class="nav-link dropdown-toggle">Login</a>
+								</li>
+							{% endif %}
+
+						</ul>
+						<ul class="nav navbar-nav navbar-right">
+							<li class="nav-item"><a href="{% url 'cart' %}" class="cart"><span class="ti-bag"></span></a></li>
+							<li class="nav-item"><a href="{% url 'wallet_view' %}" class="wallet"><span class="ti-wallet"></span></a></li>
+						</ul>
+						<ul class="nav navbar-nav navbar-right">
+							<li class="nav-item active"><a href="{% url 'wishlist' %}" class="wishlist"><span class="lnr lnr-heart"></span></a></li>
+							<li class="nav-item">
+								<button class="search"><span class="lnr lnr-magnifier" id="search"></span></button>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</nav>
+		</div>
+		<!-- <div class="search_input" id="search_input_box">
+			<div class="container">
+				<form class="d-flex justify-content-between" method="get" action="{% url 'search_products' %}">
+					<input type="text" name="q" class="form-control" id="search_input" placeholder="Search Here">
+					<button type="submit" class="btn"></button>
+					<span class="lnr lnr-cross" id="close_search" title="Close Search"></span>
+				</form>
+			</div>
+		</div> -->
+	</header>
+	<!-- End Header Area -->
+
+	<!-- Start Banner Area -->
+    <br>
+	<section class="banner-area organic-breadcrumb">
+		<div class="container">
+			<!-- <div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
+				<div class="col-first"> -->
+					<h1>Wallet View</h1>
+
+				<!-- </div>
+			</div> -->
+		</div>
+	</section>
 
     <div class="container justify-content-center align-items-center">
         <main>
             <section class="balance">
-                <h2>Wallet Balance</h2>
+                <h3>Wallet Balance</h3>
                 <p class="balance-amount">Rs.{{user.wallet.balance}}</p>
             </section>
             <section class="add-funds">
@@ -154,6 +196,13 @@
     </table> -->
 
 
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
     <footer class="footer-area section_gap">
 		<div class="container">
 			<div class="row">

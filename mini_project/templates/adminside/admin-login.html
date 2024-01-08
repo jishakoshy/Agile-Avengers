@@ -7,12 +7,19 @@
     <title>Admin Login</title>
     <!-- Add Bootstrap CSS link -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+    <style>
+        body {
+            background-color: #a483ba; /* Set your desired background color */
+        }
+       
+    </style>
+    
 </head>
 <body>
-<div class="container h-100">
-    <div class="row h-100 justify-content-center align-items-center">
-        <div class="col-lg-5 col-12">
-            <div id="auth-left">
+<div class="d-flex justify-content-center align-items-center" style="height: 100vh;">
+        <div >
+            <div>
                 
                 <h1 class="auth-title text-center">Log in</h1>
                 <p class="auth-subtitle text-center mb-5">Log in with your data that you entered during registration.</p>
@@ -35,13 +42,7 @@
                     </div>
                     <button type="submit" class="btn btn-primary btn-block mt-4">Log in</button>
                 </form>
-                <!-- {% if messages %}
-                <div class="alert alert-danger" role="alert">
-                    {% for message in messages %}
-                        {{ message }}
-                    {% endfor %}
-                </div>
-                {% endif %} -->
+                
                 {% if error_message %}
                 <div class="alert alert-danger" role="alert">
                     {{ error_message }}
@@ -55,25 +56,17 @@
                 {% endfor %}
 
                 
-                <div class="text-center mt-4">
+                <!-- <div class="text-center mt-4">
                     <p class="text-gray-600">Don't have an account? <a href="auth-register.html" class="font-weight-bold">Sign up</a>.</p>
                     <p><a class="font-weight-bold" href="auth-forgot-password.html">Forgot password?</a>.</p>
-                </div>
+                </div> -->
             </div>
         </div>
-        <div class="col-lg-7 d-none d-lg-block">
-            <div id="auth-right">
-                <!-- You can add additional content to the right column if needed -->
-            </div>
-        </div>
-    </div>
+
+    
 </div>
 
 
-<!-- Add Bootstrap JS and jQuery links if needed -->
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
 
