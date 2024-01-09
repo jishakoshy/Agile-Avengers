@@ -64,7 +64,7 @@
             <label for="productPrice">Price</label>
             <input name="price" type="number" class="form-control" value="{{editpro.price}}" id="productPrice" placeholder="Enter product price">
         </div>
-        <div class="form-group">
+        <!-- <div class="form-group">
             <label for="productCategory">Category</label>
             <select name="category" class="form-control" id="productCategory">
                 
@@ -72,9 +72,17 @@
                 {% for values in cat %}
                 <option value="{{values.id}}"> {{values.Name}}</option>
                 {% endfor %}
-                <!-- Add more categories -->
+            </select>
+        </div> -->
+        <div class="form-group">
+            <label for="productCategory">Category</label>
+            <select name="category" class="form-control" id="productCategory">
+                {% for cat in cat %}
+                    <option value="{{cat.id}}" {% if cat.id == editpro.category.id %}selected{% endif %}> {{cat.Name}}</option>
+                {% endfor %}
             </select>
         </div>
+        
         <!-- <div class="form-group">
             <label for="productImage">Product Image</label>
             <input type="file" class="form-control-file" id="productImage">

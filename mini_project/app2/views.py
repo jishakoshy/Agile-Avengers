@@ -9,14 +9,19 @@ from django.db.models import Q, Sum, Count, DateTimeField
 from django.db.models.functions import TruncDate, TruncMonth, TruncYear
 from datetime import date
 from django.db.models.functions import TruncWeek
+from django.views.decorators.cache import never_cache
 from django.contrib.admin.views.decorators import staff_member_required
+from django.contrib.auth.decorators import login_required
 from django.template.loader import get_template
 from xhtml2pdf import pisa
 from django.http import HttpResponse
 
 # Admin Side:--------------------------------------------
 
+@never_cache
 def Admin_login(request):
+    if request.user.is_authenticated:
+        return redirect('admin_dashboard')
     if request.method == 'POST':
         username = request.POST['username']
         password = request.POST['password']
@@ -33,6 +38,7 @@ def Admin_login(request):
             messages.error(request, 'Invalid username or password')
     return render(request, 'adminside/admin-login.html')
 
+@never_cache
 @staff_member_required(login_url='admin_login')    
 def Admin_dash(request):
     if request.user.is_authenticated:
@@ -46,8 +52,7 @@ def Admin_dash(request):
             'total_products': total_products,
         }
 
-        return render(request, 'adminside/admindash.html', context)
-    
+        return render(request, 'adminside/admindash.html', context)  
     return redirect('admin_login')
 
 
@@ -134,9 +139,9 @@ def delete_category(request, category_id):
 # def Admin_edit(request, id):
 #     product = get_object_or_404(Product, id=id)
 #     categories = Category.objects.all()
+
 #     if request.method == 'POST':
 #         category_id = request.POST.get('category')
-
 #         try:
 #             selected_category = Category.objects.get(id=category_id)
 #         except Category.DoesNotExist:
@@ -150,22 +155,26 @@ def delete_category(request, category_id):
 #             quantity = int(request.POST['quantity'])
 #             if quantity < 0:
 #                 raise ValueError("Quantity must be greater than or equal to zero.")
+#             if selected_category and selected_category.Name == 'Shoes':
+#                 size = request.POST['size']
+#             else:
+#                 size = None
 
-#             size = request.POST['size'] 
 #             product.price = price
 #             product.quantity = quantity
 #             product.size = size
+
 #         except ValueError as e:
 #             return render(request, 'adminside/admin_edit.html', {'editpro': product, 'cat': categories, 'error_message': str(e)})
+
 #         if selected_category:
 #             product.category = selected_category
+
 #         product.save()
 #         return redirect('productview')
 
 #     return render(request, 'adminside/admin_edit.html', {'editpro': product, 'cat': categories})
 
-
-@staff_member_required(login_url='admin_login') 
 def Admin_edit(request, id):
     product = get_object_or_404(Product, id=id)
     categories = Category.objects.all()
@@ -204,6 +213,8 @@ def Admin_edit(request, id):
         return redirect('productview')
 
     return render(request, 'adminside/admin_edit.html', {'editpro': product, 'cat': categories})
+
+
 
 
 @staff_member_required(login_url='admin_login')
@@ -511,11 +522,11 @@ def Salesreport(request):
             sales_count=Count('id')
         ).order_by('order_date_day')
 
-        # formatted_dates = [entry['order_date_day'].strftime('%d-%B') for entry in daily_sales_data]
-        formatted_dates = [
-            entry['order_date_day'].strftime('%d-%B') if entry['order_date_day'] is not None else 'N/A'
-            for entry in daily_sales_data
-        ]
+        formatted_dates = [entry['order_date_day'].strftime('%d-%B') for entry in daily_sales_data]
+        # formatted_dates = [
+        #     entry['order_date_day'].strftime('%d-%B') if entry['order_date_day'] is not None else 'N/A'
+        #     for entry in daily_sales_data
+        # ]
 
         sales_count = [entry['sales_count'] for entry in daily_sales_data]
         total_amounts = [float(entry['total_sales']) if entry['total_sales'] is not None else 0.0 for entry in daily_sales_data]

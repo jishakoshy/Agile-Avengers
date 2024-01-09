@@ -1,12 +1,38 @@
 <!DOCTYPE html>
-<html lang="en">
+{% load static %}
+<html lang="zxx" class="no-js">
 <head>
+    <!-- Mobile Specific Meta -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Favicon-->
+    <link rel="shortcut icon" href="{% static 'img/fav.png' %}">
+    <!-- Author Meta -->
+    <meta name="author" content="CodePixar">
+    <!-- Meta Description -->
+    <meta name="description" content="">
+    <!-- Meta Keyword -->
+    <meta name="keywords" content="">
+    <!-- meta character set -->
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Edit</title>
-    <!-- Add your CSS links here -->
+    <!-- Site Title -->
+    <title>AGILE AVENGERS </title>
+    <!--
+        CSS
+        ============================================= -->
+    <link rel="stylesheet" href="{% static 'css/linearicons.css' %}">
+    <link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/themify-icons.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'css/owl.carousel.css' %}">
+    <link rel="stylesheet" href="{% static 'css/nice-select.css' %}">
+    <link rel="stylesheet" href="{% static 'css/nouislider.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/ion.rangeSlider.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/ion.rangeSlider.skinFlat.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/magnific-popup.css' %}">
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+    
     <style>
-        body {
+         /* body {
             font-family: Arial, sans-serif;
             background-color: #f4f4f4;
             margin: 0;
@@ -17,13 +43,13 @@
             align-items: center;
             justify-content: flex-start;
             height: 100vh;
-        }
+        } */
 
-        h1 {
+        /* h1 {
             text-align: center;
             color: #333;
             margin-top: 10px;
-        }
+        }  */
 
         form {
             max-width: 400px;
@@ -36,12 +62,12 @@
             box-sizing: border-box;
         }
 
-        label {
+         /* label {
             display: block;
             margin-bottom: 8px;
             font-weight: bold;
             color: #555;
-        }
+        } */
 
         input {
             width: 100%;
@@ -53,7 +79,7 @@
         }
 
         button {
-            background-color: #4caf50;
+            background-color: #45a049;
             color: white;
             padding: 10px 15px;
             border: none;
@@ -63,13 +89,81 @@
 
         button:hover {
             background-color: #45a049;
-        }
+        } 
     </style>
 
 </head>
 <body>
+    <header class="header_area sticky-header">
+        <div class="main_menu">
+            <nav class="navbar navbar-expand-lg navbar-light main_box">
+                <div class="container">
+                    <!-- Brand and toggle get grouped for better mobile display -->
+                    <a class="navbar-brand logo_h" href="{% url 'home' %}"><img
+                            src="{% static 'img/mini_project_logo.png' %}" style="height:5rem; width: 7rem; "
+                            alt=""></a>
+                    <button class="navbar-toggler" type="button" data-toggle="collapse"
+                        data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <!-- Collect the nav links, forms, and other content for toggling -->
+                    <div class="collapse navbar-collapse offset" id="navbarSupportedContent">
+						<ul class="nav navbar-nav menu_nav ml-auto">
+							<li class="nav-item "><a class="nav-link" href="{% url 'home' %}">Home</a>
+							</li>
+							<li class="nav-item "><a class="nav-link" href="{% url 'Shop' %}">Shop</a>
+							</li>
+							<li class="nav-item"><a class="nav-link" href="{% url 'userprofile' %}">Profile</a></li>
 
-<h1>Edit User Details</h1>
+							{% if request.user.is_authenticated %}
+								<li class="nav-item submenu dropdown">
+									<a href="{% url 'logout' %}" class="nav-link dropdown-toggle">Logout</a>
+								</li>
+							{% else %}
+								<li class="nav-item submenu dropdown">
+									<a href="{% url 'loginn' %}" class="nav-link dropdown-toggle">Login</a>
+								</li>
+							{% endif %}
+
+						</ul>
+						<ul class="nav navbar-nav navbar-right">
+							<li class="nav-item"><a href="{% url 'cart' %}" class="cart"><span class="ti-bag"></span></a></li>
+							<li class="nav-item"><a href="{% url 'wallet_view' %}" class="wallet"><span class="ti-wallet"></span></a></li>
+						</ul>
+						<ul class="nav navbar-nav navbar-right">
+							<li class="nav-item"><a href="{% url 'wishlist' %}" class="wishlist"><span class="lnr lnr-heart"></span></a></li>
+							<li class="nav-item">
+								<button class="search"><span class="lnr lnr-magnifier" id="search"></span></button>
+							</li>
+						</ul>
+					</div>
+                </div>
+            </nav>
+        </div>
+        <!-- <div class="search_input" id="search_input_box">
+            <div class="container">
+                <form class="d-flex justify-content-between" method="get" action="{% url 'search_products' %}">
+                    <input type="text" name="q" class="form-control" id="search_input" placeholder="Search Here">
+                    <button type="submit" class="btn"></button>
+                    <span class="lnr lnr-cross" id="close_search" title="Close Search"></span>
+                </form>
+            </div>
+        </div> -->
+    </header>
+    <section class="banner-area organic-breadcrumb">
+        <div class="container">
+            <!-- <div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
+                <div class="col-first"> -->
+                    <h1> Edit Details</h1>
+                </div>
+            </div>
+        </div>
+    </section>
+
+<h3>Edit User Details</h3>
 
 <form method="post" action="{% url 'user_edit' %}">
     {% csrf_token %}
@@ -88,6 +182,54 @@
     
     <button type="submit">Save Changes</button>
 </form>
+<footer class="footer-area section_gap">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-3  col-md-6 col-sm-6">
+                <div class="single-footer-widget">
+                    <h6>About Us</h6>
+                    <p>
+                        The beauty of the game is strength and technique and when you shorten the game,
+                        technique goes for a toss and the quality of badminton will surely go down in this system.
+                    </p>
+                </div>
+            </div>
+            <div class="col-lg-4  col-md-6 col-sm-6">
+                <div class="single-footer-widget">
+                    <h6>Newsletter</h6>
+                    <p>Stay update with our latest</p>
 
+                </div>
+            </div>
+            <div class="col-lg-3  col-md-6 col-sm-6">
+                <div class="single-footer-widget mail-chimp">
+                    <h6 class="mb-20">Contact Us</h6>
+                    <p>Agileavengers trivandrum
+                        mobno. 7521454639
+                    </p>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-6 col-sm-6">
+                <div class="single-footer-widget">
+                    <h6>Follow Us</h6>
+                    <p>Let us be social</p>
+                    <div class="footer-social d-flex align-items-center">
+                        <a href="#"><i class="fa fa-facebook"></i></a>
+                        <a href="#"><i class="fa fa-twitter"></i></a>
+                        <a href="#"><i class="fa fa-dribbble"></i></a>
+                        <a href="#"><i class="fa fa-behance"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom d-flex justify-content-center align-items-center flex-wrap">
+            <p class="footer-text m-0">
+                Copyright &copy;
+                <script>document.write(new Date().getFullYear());</script> All rights reserved | AGILE AVENGERS
+
+            </p>
+        </div>
+    </div>
+</footer>
 </body>
 </html>

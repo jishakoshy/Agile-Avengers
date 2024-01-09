@@ -18,7 +18,6 @@ urlpatterns = [
     # path('verify_otp/', views.verify_otp, name='verify_otp'),
 
         #forgot password
-
     path('reset_password' , PasswordResetView.as_view(template_name="userside/password_reset.html"), name= 'reset_password'),
     path('reset_password_sent' , PasswordResetDoneView.as_view(template_name="userside/password_done.html"), name= 'password_reset_done'),
     path('reset/<uidb64>/<token>/' , PasswordResetConfirmView.as_view(template_name="userside/password_confirm.html"), name= 'password_reset_confirm'),

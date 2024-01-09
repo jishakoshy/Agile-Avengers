@@ -89,7 +89,7 @@ DATABASES = {
         'HOST':'localhost',
         'PORT':'3306',
         'USER':'root',
-        'PASSWORD':'pass123',
+        'PASSWORD':'pass@123',
         
     }
 }
@@ -125,8 +125,8 @@ AUTH_USER_MODEL = 'main.Customer'
 
 
 LANGUAGE_CODE = 'en-us'
-# TIME_ZONE = 'UTC'
-TIME_ZONE = 'Asia/Kolkata'
+TIME_ZONE = 'UTC'
+# TIME_ZONE = 'Asia/Kolkata'
 USE_I18N = True
 USE_TZ = True
 

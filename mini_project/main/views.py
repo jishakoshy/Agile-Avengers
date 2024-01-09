@@ -87,8 +87,10 @@ from django.conf import settings
 
 #     return render(request, 'userside/login.html')
 
-
-def loginn(request):  
+@never_cache
+def loginn(request):
+    if request.user.is_authenticated:
+        return redirect('home')  
     if request.method == 'POST':
         username = request.POST['email']
         password = request.POST['password']
@@ -169,13 +171,13 @@ def Sign_up(request):
 
 #     return render(request, 'userside/login.html')
 
-
+@never_cache
 def Home(request):   
     product = Product.objects.filter(deleted=False, is_varient = False)
     return render(request,'userside/home.html', {'products':product})
 
     
-# @login_required
+
 def signout(request):
     logout(request)
     return redirect('home') 
@@ -185,10 +187,12 @@ def signout(request):
 #         request.session.flush()
 #     return redirect(loginn)     
 
+@never_cache
 def Shop(request):
     product = Product.objects.filter(deleted=False, is_varient = False)
     return render(request,'userside/shop.html' , {'products': product})
 
+@never_cache
 def Product_detail(request,product_id):
     product = Product.objects.get(id = product_id)
     subimage = Subimage.objects.filter(products_id = product)
@@ -201,6 +205,8 @@ def Product_detail(request,product_id):
         size = request.POST['size']
         product = Product.objects.filter(Name = product.Name , size = size).first()
     return render(request,'userside/productdetail.html',{'product':product , 'subimg' : subimage, "sizes":sizes})
+
+@never_cache
 # search
 def search_products(request):
     query = request.GET.get('q', '')
@@ -465,6 +471,7 @@ def checkout_view(request):
 
 
 from django.contrib import messages
+@never_cache
 def payment(request):
     cart_items = Cart.objects.filter(user=request.user)
     subtotal = sum(item.product.price * item.quantity for item in cart_items)
