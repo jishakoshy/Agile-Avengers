@@ -281,8 +281,8 @@ def add_to_cart(request, product_id):
     return redirect('home')
 
 
-@login_required
 # wishlist
+@login_required
 def wishlist_view(request):
     if request.user.is_authenticated:       
         wishlist_items = Wishlist.objects.filter(user=request.user)
@@ -293,6 +293,7 @@ def wishlist_view(request):
         'wishlist_items': wishlist_items,
     }
     return render(request, 'userside/wishlist.html', context)
+
 
 @login_required
 def add_to_wishlist(request, product_id):
@@ -306,6 +307,13 @@ def add_to_wishlist(request, product_id):
         messages.success(request, f'{product.Name} added to your wishlist successfully.')
 
     return redirect('home')
+
+@login_required
+def delete_from_wishlist(request, item_id):
+    item = get_object_or_404(Wishlist, id=item_id)
+    item.delete()
+    return redirect('wishlist')
+
 
 @login_required
 def cart(request):

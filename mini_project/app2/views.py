@@ -288,17 +288,7 @@ def Add_product(request):
             # Check if the product with the same name already exists
             existing_product = Product.objects.filter(Name=Name).first()
 
-            # if existing_product:
-            #     # If the product exists, update its quantity
-            #     size_object, created = Size.objects.get_or_create(product=existing_product, size=size)
-            #     if created:
-            #         size_object.quantity = int(quantity)
-            #     else:
-            #         size_object.quantity += int(quantity)
-            #     size_object.save()
-
-            # else:
-                # If the product does not exist, create a new product
+            
             product = Product.objects.create(Name=Name, description=description, price=price, image=image, category=category, size=size, quantity=quantity, is_varient= is_varient)
             # size_object = Size.objects.create(size=size, product=product, quantity=quantity)
 

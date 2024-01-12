@@ -67,6 +67,7 @@ urlpatterns = [
     # Wishlist------------------------------------
     path('wishlist/', views.wishlist_view, name='wishlist'),
     path('add-to-wishlist/<int:product_id>/', views.add_to_wishlist, name='add_to_wishlist'),
+    path('delete_from_wishlist/<int:item_id>/',views.delete_from_wishlist, name='delete_from_wishlist'),
 
     # cart management-----------------------------
     path('add_to_cart/<int:product_id>/', views.add_to_cart, name='add_to_cart'),
