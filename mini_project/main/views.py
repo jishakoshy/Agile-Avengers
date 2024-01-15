@@ -122,7 +122,12 @@ def Sign_up(request):
         if Customer.objects.filter(email=email).exists():
             messages.error(request, 'This email is already registered.')
             return redirect('sign_up')
+        else:
+            if not re.match(r'^[a-zA-Z0-9._%+-]+@[a-z]+.com$' , email):
+                messages.error(request, 'Enter email correctly.')
+                return redirect('sign_up')
 
+ 
         if not re.match(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$', password):
             messages.error(request, 'Password must contain at least one uppercase letter, one lowercase letter, one digit, and one special character.')
             return redirect('sign_up')

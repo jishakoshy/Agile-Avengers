@@ -94,14 +94,12 @@ def Add_category(request, category_id=None):
         
         
         if category:
-            # Editing an existing category
             category.Name = name
             category.description = description
             category.status = status
             category.save()
             messages.success(request, 'Category updated successfully.')
         else:
-            # Adding a new category
             Category.objects.create(Name=name, description=description, status=status)
             messages.success(request, 'Category added successfully.')
   
@@ -205,7 +203,6 @@ def Admin_edit(request, id):
 
         except ValueError as e:
             return render(request, 'adminside/admin_edit.html', {'editpro': product, 'cat': categories, 'error_message': str(e)})
-
         if selected_category:
             product.category = selected_category
 
@@ -432,7 +429,7 @@ def update_order_status(request, order_id):
 # inventory stock---------------
 @staff_member_required(login_url='admin_login')
 def stock_list(request):
-    product = Product.objects.all()
+    product = Product.objects.filter(status=True)
     return render(request, 'adminside/admin_inventory.html', {'product':product})
 
 
