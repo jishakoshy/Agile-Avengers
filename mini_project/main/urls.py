@@ -79,7 +79,7 @@ urlpatterns = [
 
     # wallet----------------------------------------
     path('wallet/', views.wallet, name='wallet_view'),
-    # path('deposit_wallet/', views.deposit_wallet, name='deposit_wallet'),
+   
 
 
 

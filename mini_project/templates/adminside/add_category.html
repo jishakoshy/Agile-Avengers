@@ -148,12 +148,13 @@
 
       </ul>
     </nav>
-
+    
     <div class="box-container">
+      <h2 style="text-align: center;">Add Categories </h2>
       <div class="content" style="text-align: center;">
         <div class="container" style="width: 120vh;">
     
-          <form method="POST" action="{% url 'add_category' %}" style="border: 2px solid #3498db; padding: 15px; border-radius: 10px;">
+          <form method="POST" action="{% url 'add_category' %}" style="border: 2px solid #00060a6c; padding: 15px; border-radius: 10px;">
             {% csrf_token %}
             <div class="form-group">
               <label for="name">Category Name:</label>
@@ -172,20 +173,22 @@
             </div>
           </form>
     
-          {% if error_message %}
-          <div class="alert alert-danger" role="alert">
-            {{ error_message }}
+          {% if message %}
+          <div class="alert alert" role="alert">
+            {{ message }}
           </div>
           {% endif %}
     
           {% for message in messages %}
-          <div class="alert alert-danger" role="alert">
+          <div class="alert alert" role="alert">
             {{ message }}
           </div>
           {% endfor %}
     
-          <h2>Categories</h2>
+          
           <table>
+            <br>
+            <br>
             <thead>
               <tr>
                 <th>ID</th>

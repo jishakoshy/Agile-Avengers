@@ -179,7 +179,7 @@
     <input type="text" name="new_last_name" pattern="^[^\s].*$"  value="{{ user.last_name }}" required><br>
     
     <label for="new_email">Email:</label>
-    <input type="email" name="new_email"  pattern="[a-z0-9._%+-]+@gmail\.com" value="{{ user.email }}" required><br>
+    <input type="email" name="new_email"  pattern="^[a-zA-Z0-9._%+-]+@[a-z]+.com$" value="{{ user.email }}" required><br>
     
     <label for="new_phone_number">Phone Number:</label>
     <input type="tel" name="new_phone_number"  pattern="[6-9]\d{9}" value="{{ user.phone_number }}" required><br>

@@ -52,28 +52,22 @@
         </div>
 
         <div class="form-group">
-            <label for="productSize">Size</label>
+            
             {% if editpro.category.Name == 'Shoes' %}
+            <label for="productSize">Size</label>
             <input name="size" type="text" class="form-control" value="{{ editpro.size }}" id="productSize" placeholder="Enter product size">
             {% else %}
+           
             <input name="size" type="text" class="form-control" value="None" id="productSize" readonly>
             {% endif %}
         </div>
+               
 
         <div class="form-group">
             <label for="productPrice">Price</label>
             <input name="price" type="number" class="form-control" value="{{editpro.price}}" id="productPrice" placeholder="Enter product price">
         </div>
-        <!-- <div class="form-group">
-            <label for="productCategory">Category</label>
-            <select name="category" class="form-control" id="productCategory">
-                
-                <option value="{{procat.id}}"> {{procat.Name}}</option>
-                {% for values in cat %}
-                <option value="{{values.id}}"> {{values.Name}}</option>
-                {% endfor %}
-            </select>
-        </div> -->
+        
         <div class="form-group">
             <label for="productCategory">Category</label>
             <select name="category" class="form-control" id="productCategory">
@@ -81,12 +75,9 @@
                     <option value="{{cat.id}}" {% if cat.id == editpro.category.id %}selected{% endif %}> {{cat.Name}}</option>
                 {% endfor %}
             </select>
+        
         </div>
         
-        <!-- <div class="form-group">
-            <label for="productImage">Product Image</label>
-            <input type="file" class="form-control-file" id="productImage">
-        </div> -->
         <button type="submit" class="btn btn-primary">Save Changes</button>
     </form>
     {% if error_message %}
@@ -102,7 +93,6 @@
     {% endfor %}
 </div>
 
-<!-- Include Bootstrap and jQuery JavaScript -->
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

@@ -113,6 +113,9 @@ class Category(models.Model):
         self.status = False  
         self.save()
 
+    def __str__(self) -> str:
+        return self.Name
+
 class Order(models.Model):
     STATUS_CHOICES = [
         ('Pending', 'Pending'),

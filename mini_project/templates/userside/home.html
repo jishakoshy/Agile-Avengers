@@ -3,14 +3,14 @@
 <html lang="en" class="no-js">
 
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="shortcut icon" href="{% static 'img/favicon.png' %}">
-    <meta name="author" content="CodePixar">
-    <meta charset="UTF-8">
-    <title>AGILE AVENGERS - Badminton & Shoes Store</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<link rel="shortcut icon" href="{% static 'img/favicon.png' %}">
+	<meta name="author" content="CodePixar">
+	<meta charset="UTF-8">
+	<title>AGILE AVENGERS - Badminton & Shoes Store</title>
 
-    <link rel="stylesheet" href="{% static 'css/ecommerce-style.css' %}">
-    <!-- Include your existing CSS files -->
+	<link rel="stylesheet" href="{% static 'css/ecommerce-style.css' %}">
+	<!-- Include your existing CSS files -->
 	<link rel="stylesheet" href="{% static 'css/linearicons.css' %}">
 	<link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}">
 	<link rel="stylesheet" href="{% static 'css/themify-icons.css' %}">
@@ -24,85 +24,84 @@
 	<link rel="stylesheet" href="{% static 'css/main.css' %}">
 
 
-    <style>
-
-        body {
-            font-family: 'Roboto', sans-serif;
-            background-color: #f8f9fa;
+	<style>
+		body {
+			font-family: 'Roboto', sans-serif;
+			background-color: #f8f9fa;
 			overflow-x: hidden;
-        }
+		}
 
-        /* header {
+		/* header {
              background-color: #343a40; 
             color: #ffffff;
         }  */
 
-        .logo_h img {
-            max-width: 100%;
-            height: auto;
-        }
+		.logo_h img {
+			max-width: 100%;
+			height: auto;
+		}
 
-        .banner-area {
-            background-color: #ffffff;
-            padding: 80px 0;
-        }
-		
-        .banner-content h1 {
-            font-size: 36px;
-            color: #333333;
-        }
+		.banner-area {
+			background-color: #ffffff;
+			padding: 80px 0;
+		}
 
-        .latest-products {
-            padding: 80px 0;
-        }
+		.banner-content h1 {
+			font-size: 36px;
+			color: #333333;
+		}
 
-        .single-product img {
-            width: 100%;
-            height: auto;
-            border: 1px solid #e5e5e5;
-            border-radius: 5px;
-        }
+		.latest-products {
+			padding: 80px 0;
+		}
 
-        .single-product h6 {
-            font-size: 16px;
-            color: #333333;
-            margin-top: 10px;
-        }
+		.single-product img {
+			width: 100%;
+			height: auto;
+			border: 1px solid #e5e5e5;
+			border-radius: 5px;
+		}
+
+		.single-product h6 {
+			font-size: 16px;
+			color: #333333;
+			margin-top: 10px;
+		}
 
 
-        .prd-bottom {
-            margin-top: 15px;
-        }
+		.prd-bottom {
+			margin-top: 15px;
+		}
 
-        footer {
-            background-color: #343a40;
-            color: #ffffff;
-            padding: 50px 0;
-        }
+		footer {
+			background-color: #343a40;
+			color: #ffffff;
+			padding: 50px 0;
+		}
 
-        .footer-social a {
-            color: #ffffff;
-            margin-right: 15px;
-        }
+		.footer-social a {
+			color: #ffffff;
+			margin-right: 15px;
+		}
 
-        .footer-text {
-            font-size: 14px;
-        }
-    </style>
+		.footer-text {
+			font-size: 14px;
+		}
+	</style>
 
 </head>
 
 <body>
 
-	<header class="header_area sticky-header" >
-		<div class="main_menu" >
+	<header class="header_area sticky-header">
+		<div class="main_menu">
 			<nav class="navbar navbar-expand-lg navbar-light main_box" style="padding-top: 10px; ">
 				<div class="container">
-			
+
 					<a class="navbar-brand logo_h" href="{% url 'home' %}"><img
 							src="{% static 'img/mini_project_logo.png' %}" style="height:5rem; width: 7rem; "
 							alt=""></a>
-				
+
 					<div class="collapse navbar-collapse offset" id="navbarSupportedContent">
 						<ul class="nav navbar-nav menu_nav ml-auto">
 							<li class="nav-item active "><a class="nav-link " href="{% url 'home' %}">Home</a>
@@ -112,22 +111,25 @@
 							<li class="nav-item"><a class="nav-link" href="{% url 'userprofile' %}">Profile</a></li>
 
 							{% if request.user.is_authenticated %}
-								<li class="nav-item submenu dropdown">
-									<a href="{% url 'logout' %}" class="nav-link dropdown-toggle">Logout</a>
-								</li>
+							<li class="nav-item submenu dropdown">
+								<a href="{% url 'logout' %}" class="nav-link dropdown-toggle">Logout</a>
+							</li>
 							{% else %}
-								<li class="nav-item submenu dropdown">
-									<a href="{% url 'loginn' %}" class="nav-link dropdown-toggle">Login</a>
-								</li>
+							<li class="nav-item submenu dropdown">
+								<a href="{% url 'loginn' %}" class="nav-link dropdown-toggle">Login</a>
+							</li>
 							{% endif %}
 
 						</ul>
 						<ul class="nav navbar-nav navbar-right">
-							<li class="nav-item"><a href="{% url 'cart' %}" class="cart"><span class="ti-bag"></span></a></li>
-							<li class="nav-item"><a href="{% url 'wallet_view' %}" class="wallet"><span class="ti-wallet"></span></a></li>
+							<li class="nav-item"><a href="{% url 'cart' %}" class="cart"><span
+										class="ti-bag"></span></a></li>
+							<li class="nav-item"><a href="{% url 'wallet_view' %}" class="wallet"><span
+										class="ti-wallet"></span></a></li>
 						</ul>
 						<ul class="nav navbar-nav navbar-right">
-							<li class="nav-item"><a href="{% url 'wishlist' %}" class="wishlist"><span class="lnr lnr-heart"></span></a></li>
+							<li class="nav-item"><a href="{% url 'wishlist' %}" class="wishlist"><span
+										class="lnr lnr-heart"></span></a></li>
 							<li class="nav-item">
 								<button class="search"><span class="lnr lnr-magnifier" id="search"></span></button>
 							</li>
@@ -146,22 +148,32 @@
 			</div>
 		</div>
 	</header>
-
+	
 	<section class="banner-area" style="height: 695px; width: 1350px; padding-left:20px  padding-right :20px">
 		<div class="container" style="margin: 0;">
-			<div class="row fullscreen align-items-center justify-content-start" >
+			
+			<div class="row fullscreen align-items-center justify-content-start">
 				<div class="col-lg-12">
+					
 					<div class="">
+
 						<div class="row single-slide align-items-center d-flex" style="color: rgb(255, 0, 55);">
-							<div class="col-lg-7" >
-								<div class="banner-img" style="overflow-x:hidden;height: 555px; width: 1150px; width: 100vw;  background: url('{% static 'img/muktasim-azlan-rjWfNR_AC5g-unsplash.jpg' %}') center center / cover no-repeat; padding-top: 5px; position: relative; background-size: cover; background-position: top;">
-									<div class="banner-content text-left" style="position: absolute; top: 50%; left: 10%; transform: translateY(-50%); ">
+							<div class="col-lg-7">
+								
+								<div class="banner-img"
+									style="overflow-x:hidden;height: 555px; width: 1150px; width: 100vw;  background: url('{% static 'img/muktasim-azlan-rjWfNR_AC5g-unsplash.jpg' %}') center center / cover no-repeat; padding-top: 5px; position: relative; background-size: cover; background-position: top;">
+									<div class="banner-content text-left"
+										style="position: absolute; top: 50%; left: 10%; transform: translateY(-50%); ">
 										<h1 style="color: white;">AGILE <br> AVENGERS <br>Collections! </h1>
-										<p>The beauty of the game is strength and technique, and when<br> you shorten the game,
-											technique goes for a toss, and the <br>quality of badminton will surely go down in
+										<p>The beauty of the game is strength and technique, and when<br> you shorten
+											the game,
+											technique goes for a toss, and the <br>quality of badminton will surely go
+											down in
 											this system.</p>
 									</div>
-								</div>																							
+									
+								</div>
+
 							</div>
 						</div>
 					</div>
@@ -169,7 +181,7 @@
 			</div>
 		</div>
 	</section>
-		
+	
 	<section class="">
 		<div class="single-product-slider">
 			<div class="container">
@@ -187,44 +199,53 @@
 						</div>
 					</div>
 				</div>
+				{% for message in messages %}
+				<p class="alert alert-danger">{{message}}</p>
+				{% endfor %}
+				<script>
+					setTimeout(()=>{
+						$(".alert").alert("close");
 
+					},5000) 
+				</script>
 				<div class="row">
-					
+
 					{% for i in products %}
 					<div class="col-lg-3 col-md-6">
 						<div class="single-product">
 							<input type="hidden" name="product_id" value="{{ i.id }}">
-							    <img class="img-fluid" src="{{i.image.url}}" alt="img" style  = "width: 250px; height:250px ;">
-								<div class="product-details">
-									<h6>{{i.Name}}</h6>
-									<div class="price">
-										<h6>{{i.price}}</h6>
+							<img class="img-fluid" src="{{i.image.url}}" alt="img" style="width: 250px; height:250px ;">
+							<div class="product-details">
+								<h6>{{i.Name}}</h6>
+								<div class="price">
+									<h6>{{i.price}}</h6>
+
 
 									<!-- <h6 class="l-through">$210.00</h6> -->
-									</div>
-								
-									<div class="prd-bottom">
-										<form method="post" >
-											{% csrf_token %}
-											
-											<a href="{% url 'add_to_cart' i.id %}" class="social-info">
-												<span class="ti-bag"></span>
-												<p class="hover-text">Add to cart</p>
-											</a>
-										    <a href="{% url 'add_to_wishlist' i.id %}" class="social-info">
-												<span class="lnr lnr-heart"></span>
-												<p class="hover-text">Add to Wishlist</p>
-											</a>
-											<a href="{% url 'product_detail' i.id %}" class="social-info">
-												<span class="fas fa-eye"></span>
-												<p class="hover-text">View</p>
-											</a>
-									    </form>
-									</div>
-								
 								</div>
-						    </div>
-					    </div>
+
+								<div class="prd-bottom">
+									<form method="post">
+										{% csrf_token %}
+
+										<a href="{% url 'add_to_cart' i.id %}" class="social-info">
+											<span class="ti-bag"></span>
+											<p class="hover-text">Add to cart</p>
+										</a>
+										<a href="{% url 'add_to_wishlist' i.id %}" class="social-info">
+											<span class="lnr lnr-heart"></span>
+											<p class="hover-text">Add to Wishlist</p>
+										</a>
+										<a href="{% url 'product_detail' i.id %}" class="social-info">
+											<span class="fas fa-eye"></span>
+											<p class="hover-text">View</p>
+										</a>
+									</form>
+								</div>
+
+							</div>
+						</div>
+					</div>
 					{% endfor %}
 
 				</div>
@@ -286,7 +307,8 @@
 	</footer>
 
 	<script src="{% static 'js/vendor/jquery-2.2.4.min.js' %}"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4"
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"
+		integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4"
 		integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4"
 		crossorigin="anonymous"></script>
 	<script src="{% static 'js/vendor/bootstrap.min.js' %}"></script>
@@ -308,7 +330,7 @@
 		crossorigin="anonymous"></script>
 
 	<!-- <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script> -->
-	
+
 </body>
 
 </html>

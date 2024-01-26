@@ -62,6 +62,7 @@ def Logout(request):
         logout(request)
     return redirect('admin_login') 
 
+@never_cache
 @staff_member_required(login_url='admin_login')
 def Productlist(request):
     if request.method == 'POST':
@@ -77,6 +78,7 @@ def Productlist(request):
 
 
 # Category Management
+@never_cache
 @staff_member_required(login_url='admin_login')
 def Add_category(request, category_id=None):
     category = None
@@ -87,7 +89,7 @@ def Add_category(request, category_id=None):
         existing_category = Category.objects.filter(Name=name)
         if existing_category.exists():
             error_message = "Category with this name already exists."
-            return render(request, 'adminside/add_category.html', {'error_message': error_message})
+            return render(request, 'adminside/add_category.html', {'message': error_message})
 
         if category_id:
             category = get_object_or_404(Category, id=category_id)
@@ -107,6 +109,7 @@ def Add_category(request, category_id=None):
     categories = Category.objects.all()
     return render(request, 'adminside/add_category.html', {'categories': categories})
 
+@never_cache
 @staff_member_required(login_url='admin_login')
 def Edit_category(request, category_id):
     category = get_object_or_404(Category, id=category_id)
@@ -126,65 +129,32 @@ def Edit_category(request, category_id):
 
     return render(request, 'adminside/adm_cate_edit.html', {'category': category})
 
+@never_cache
 @staff_member_required(login_url='admin_login')
 def delete_category(request, category_id):
     category = get_object_or_404(Category, id=category_id)
-    category.soft_delete()
+    category.delete()
     return redirect('add_category')
 
 # product management::--
-# @staff_member_required(login_url='admin_login') 
-# def Admin_edit(request, id):
-#     product = get_object_or_404(Product, id=id)
-#     categories = Category.objects.all()
-
-#     if request.method == 'POST':
-#         category_id = request.POST.get('category')
-#         try:
-#             selected_category = Category.objects.get(id=category_id)
-#         except Category.DoesNotExist:
-#             selected_category = None
-#         product.Name = request.POST['name']
-#         product.quantity = request.POST['quantity']
-#         try:
-#             price = float(request.POST['price'])
-#             if price < 0:
-#                 raise ValueError("Price must be greater than or equal to zero.")
-#             quantity = int(request.POST['quantity'])
-#             if quantity < 0:
-#                 raise ValueError("Quantity must be greater than or equal to zero.")
-#             if selected_category and selected_category.Name == 'Shoes':
-#                 size = request.POST['size']
-#             else:
-#                 size = None
-
-#             product.price = price
-#             product.quantity = quantity
-#             product.size = size
-
-#         except ValueError as e:
-#             return render(request, 'adminside/admin_edit.html', {'editpro': product, 'cat': categories, 'error_message': str(e)})
-
-#         if selected_category:
-#             product.category = selected_category
-
-#         product.save()
-#         return redirect('productview')
-
-#     return render(request, 'adminside/admin_edit.html', {'editpro': product, 'cat': categories})
-
+@never_cache
 def Admin_edit(request, id):
     product = get_object_or_404(Product, id=id)
     categories = Category.objects.all()
-
+    
     if request.method == 'POST':
         category_id = request.POST.get('category')
+        selected_category_id = request.POST.get('category')
+        category = Category.objects.get(id=selected_category_id)
+
         try:
             selected_category = Category.objects.get(id=category_id)
         except Category.DoesNotExist:
             selected_category = None
+
         product.Name = request.POST['name']
         product.quantity = request.POST['quantity']
+
         try:
             price = float(request.POST['price'])
             if price < 0:
@@ -193,12 +163,14 @@ def Admin_edit(request, id):
             if quantity < 0:
                 raise ValueError("Quantity must be greater than or equal to zero.")
             if selected_category and selected_category.Name == 'Shoes':
-                size = request.POST['size']
+                size = request.POST['size'] 
             else:
                 size = None
-
             product.price = price
-            product.quantity = quantity
+            product.quantity = quantity            
+            if category.Name == 'Shoes' and size == 'None':
+               size = 7
+
             product.size = size
 
         except ValueError as e:
@@ -213,7 +185,6 @@ def Admin_edit(request, id):
 
 
 
-
 @staff_member_required(login_url='admin_login')
 def Admin_delete(request,id):
     product = get_object_or_404(Product, id=id)
@@ -221,40 +192,10 @@ def Admin_delete(request,id):
     product.save()
     return redirect('productview')
 
-# def Add_product(request):
-#     if request.method == 'POST':
-#         Name = request.POST['name']
-#         description = request.POST['discription']
-#         quantity = request.POST['quantity']
-#         price = request.POST['price']
-#         size = request.POST['size']
-#         image = request.FILES['image']
-#         if 'category' in request.POST:
-#             category_name = request.POST['category']
-#             try:
-#                 category = Category.objects.get(Name=category_name)
-#             except Category.DoesNotExist:
-#                 category = None
-        
-#         else:
-            
-#             category = None
-#         if int(price) <= 0:
-#             messages.error(request, 'enter price greater than zero')
-#         else:
-
-#             product = Product.objects.create(Name = Name, description = description , price =price, image= image , category = category)
-#             size = Size.objects.create(size= size, product = product, quantity= quantity)
-
-#             for file in request.FILES.getlist('subimages'):
-#                 Subimage.objects.create(products = product, image = file )
-#             messages.success(request, 'product added Sucessfully')
-    
-#     cat = Category.objects.all()
-#     return render(request,'adminside/addproduct.html', {'category' : cat})
 
 # -------------------------------------------------------------------------------------
 
+@never_cache
 @staff_member_required(login_url='admin_login')
 def Add_product(request):
     if request.method == 'POST':
@@ -296,97 +237,10 @@ def Add_product(request):
     return render(request, 'adminside/addproduct.html', {'category': cat})
 # --------------------------------------------------------------------------------------------------
 
-
-
-# def Add_product(request):
-#     if request.method == 'POST':
-#         # Retrieve the crop coordinates and dimensions
-#         x = request.POST.get('x')
-#         y = request.POST.get('y')
-#         width = request.POST.get('width')
-#         height = request.POST.get('height')
-
-
-#         Name = request.POST['name']
-#         description = request.POST['discription']
-#         quantity = request.POST['quantity']
-#         price = request.POST['price']
-#         size = request.POST.get('size', None)
-#         is_varient = request.POST.get('varient')
-#         image = request.FILES['image']
-#         if is_varient == 'on':
-#             is_varient = True
-#         else:
-#             is_varient = False
-
-#         if 'category' in request.POST:
-#             category_name = request.POST['category']
-#             try:
-#                 category = Category.objects.get(Name=category_name)
-#             except Category.DoesNotExist:
-#                 category = None
-#         else:
-#             category = None
-
-#         # Perform image cropping and save the product
-#         product = Product.objects.create(
-#             Name=Name,
-#             description=description,
-#             price=price,
-#             image=image,  
-#             category=category,
-#             size=size,
-#             quantity=quantity,
-#             is_varient=is_varient
-#         )
-
-#         # Perform image cropping and save the product
-#         # You need to install the Pillow library for image processing
-#         from PIL import Image
-
-#         # Open the original image using Pillow
-#         img = Image.open(product.image.path)
-
-#         # Crop the image based on the provided coordinates and dimensions
-#         cropped_img = img.crop((int(x), int(y), int(x) + int(width), int(y) + int(height)))
-
-#         # Save the cropped image
-#         cropped_img.save(product.image.path)
-
-#         # Process and save sub-images if needed
-#         for file in request.FILES.getlist('subimages'):
-#             Subimage.objects.create(products=product, image=file)
-
-#         messages.success(request, 'Product added successfully')
-
-#         # Redirect to the product detail page or another appropriate page
-#         return redirect('product_detail', product_id=product.id)
-
-#     # If the request method is not POST, render the form
-#     cat = Category.objects.all()
-#     return render(request, 'adminside/addproduct.html', {'category': cat})
-
-
-# order management and update status 
-# @staff_member_required(login_url='admin_login')
-# def order_management(request):
-#     order = Order.objects.all()
-#     return render(request, 'adminside/admin_orderstatus.html',{'order': order})
-
-
-# def update_order_status(request, order_id):
-#     order = get_object_or_404(Order, id=order_id)
-#     if request.method == 'POST':
-#         new_status = request.POST.get('status')
-#         order.status = new_status
-#         order.save()
-
-#     return redirect('order_management')
-
-
+@never_cache
 @staff_member_required(login_url='admin_login')
 def order_management(request):
-    order = Order.objects.all()
+    order = Order.objects.all().order_by('-order_date')
     return render(request, 'adminside/admin_orderstatus.html', {'order': order})
 
 
@@ -424,12 +278,10 @@ def update_order_status(request, order_id):
     return redirect('order_management')
 
 
-
-
 # inventory stock---------------
 @staff_member_required(login_url='admin_login')
 def stock_list(request):
-    product = Product.objects.filter(status=True)
+    product = Product.objects.filter(deleted=False)
     return render(request, 'adminside/admin_inventory.html', {'product':product})
 
 
